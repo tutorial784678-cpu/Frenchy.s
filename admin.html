@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frenchy’s Panel — Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='10' fill='%23D71920'/%3E%3Ctext x='22' y='31' font-family='Arial' font-weight='900' font-size='24' fill='%23FFC72C' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --red:#D71920; --red-d:#B4121A; --yellow:#FFC72C; --char:#1F1F1F;
+  --cream:#FFF8E7; --gray:#F5F5F5; --line:#ECE7DA; --mut:#8B857A;
+  --green:#2E9E5B; --orange:#E8862B;
+  --sh:0 6px 22px rgba(31,31,31,.07); --sh-lg:0 18px 44px rgba(31,31,31,.16);
+  --fd:'Fredoka',sans-serif; --fb:'Nunito Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fb);color:var(--char);background:#F4F1E9}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:var(--fb)}
+img{display:block}
+::selection{background:var(--yellow)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 14px var(--fd);letter-spacing:.02em;padding:11px 20px;border-radius:12px;transition:.2s}
+.btn:active{transform:scale(.97)}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red-d);transform:translateY(-1px)}
+.btn-yellow{background:var(--yellow);color:var(--char)}.btn-yellow:hover{transform:translateY(-1px)}
+.btn-ghost{border:2px solid var(--line);color:var(--char);background:#fff}.btn-ghost:hover{border-color:var(--char)}
+.btn-dark{background:var(--char);color:#fff}.btn-dark:hover{background:#000}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:10px}
+.btn-ic{width:34px;height:34px;padding:0;border-radius:10px;justify-content:center}
+.btn svg{width:17px;height:17px}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font:800 11px var(--fb);letter-spacing:.1em;text-transform:uppercase;color:#6b655b}
+.field input,.field select,.field textarea{font:600 14.5px var(--fb);padding:11px 13px;border:2px solid #E8E2D4;border-radius:11px;background:#FDFCF8;color:var(--char);outline:none;transition:.2s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(215,25,32,.09)}
+.field small{font-weight:700;color:var(--mut);font-size:11.5px}
+.sw{position:relative;width:44px;height:26px;appearance:none;background:#DDD6C6;border-radius:99px;cursor:pointer;transition:.2s;flex:none}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s}
+.sw:checked{background:var(--red)}.sw:checked::after{left:21px}
+
+/* ---------- login ---------- */
+.login-view{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--char)}
+.login-card{background:#fff;border-radius:26px;padding:44px 40px;width:min(400px,100%);box-shadow:var(--sh-lg)}
+.login-card .lc-brand{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:26px;text-align:center}
+.login-card h1{font:600 26px var(--fd)}
+.login-card h1 b{color:var(--red)}
+.lc-sub{color:var(--mut);font-weight:700;font-size:13px}
+.login-card form{display:flex;flex-direction:column;gap:14px}
+.login-err{display:none;font:800 13px var(--fb);color:var(--red-d);background:#FDECEC;padding:10px 14px;border-radius:10px}
+.login-err.show{display:block}
+.lc-hint{margin-top:18px;text-align:center;font-size:12px;font-weight:700;color:var(--mut);background:var(--cream);border-radius:10px;padding:9px}
+
+/* ---------- app shell ---------- */
+.app{display:none;min-height:100vh}
+.app.on{display:block}
+.side{position:fixed;left:0;top:0;bottom:0;width:256px;background:var(--char);color:#CFC9BC;display:flex;flex-direction:column;padding:22px 16px;z-index:60;transition:transform .3s}
+.side-brand{display:flex;align-items:center;gap:11px;padding:4px 8px 22px;border-bottom:1px solid #3B3B37;margin-bottom:16px}
+.side-brand span{font:600 19px var(--fd);color:#fff;line-height:1.15}
+.side-brand small{display:block;font:700 10.5px var(--fb);letter-spacing:.14em;color:var(--yellow)}
+.side-nav{display:flex;flex-direction:column;gap:4px;flex:1}
+.side-nav button{display:flex;align-items:center;gap:12px;font:500 14.5px var(--fd);padding:12px 14px;border-radius:12px;color:#CFC9BC;transition:.2s;text-align:left}
+.side-nav button svg{width:19px;height:19px}
+.side-nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+.side-nav button.active{background:var(--red);color:#fff}
+.side-logout{border-top:1px solid #3B3B37;padding-top:12px}
+.main{margin-left:256px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,241,233,.92);backdrop-filter:blur(8px);display:flex;align-items:center;gap:14px;padding:16px 30px;border-bottom:1.5px solid var(--line)}
+.topbar h1{font:600 23px var(--fd);margin-right:auto}
+.side-toggle{display:none}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:var(--char);transition:.2s;position:relative}
+.icon-btn:hover{background:rgba(31,31,31,.07)}
+.icon-btn svg{width:20px;height:20px}
+.avatar{width:42px;height:42px;border-radius:12px;background:var(--red);color:#fff;font:600 18px var(--fd);display:flex;align-items:center;justify-content:center}
+.n-badge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:99px;background:var(--red);color:#fff;font:800 10.5px var(--fb);display:none;align-items:center;justify-content:center;border:2px solid #F4F1E9}
+.n-badge.on{display:flex}
+.bell{background:#fff;border:1.5px solid var(--line)}
+.content{padding:28px 30px 46px;flex:1}
+
+/* notifications */
+.notif-panel{position:absolute;top:66px;right:30px;width:min(360px,92vw);background:#fff;border-radius:18px;box-shadow:var(--sh-lg);border:1px solid var(--line);display:none;overflow:hidden;z-index:70}
+.notif-panel.open{display:block}
+.np-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1.5px solid var(--line);font:600 16px var(--fd)}
+.np-head button{font:800 12px var(--fb);color:var(--red)}
+.np-list{max-height:320px;overflow-y:auto}
+.np-item{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid #F2EEE3;align-items:center}
+.np-item:last-child{border-bottom:none}
+.np-item.unread{background:#FFFBEF}
+.np-ic{width:38px;height:38px;flex:none;border-radius:11px;background:var(--yellow);display:flex;align-items:center;justify-content:center}
+.np-ic svg{width:18px;height:18px}
+.np-item strong{font-size:13.5px;display:block}
+.np-item small{color:var(--mut);font-weight:700;font-size:12px}
+.np-empty{padding:30px;text-align:center;color:var(--mut);font-weight:700;font-size:13px}
+
+/* ---------- cards / stats ---------- */
+.card{background:#fff;border-radius:18px;box-shadow:var(--sh);border:1px solid var(--line)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:26px}
+.stat{padding:20px;display:flex;gap:14px;align-items:center}
+.stat .s-ic{width:46px;height:46px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center}
+.stat .s-ic svg{width:21px;height:21px}
+.stat b{font:600 26px var(--fd);display:block;line-height:1.1}
+.stat span{font:800 11px var(--fb);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.panel{padding:22px}
+.panel h3{font:600 18px var(--fd);margin-bottom:14px}
+
+/* ---------- toolbar / table ---------- */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.toolbar .grow{flex:1}
+.tool-search{position:relative}
+.tool-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--mut)}
+.tool-search input{font:600 14px var(--fb);padding:11px 14px 11px 36px;border:2px solid var(--line);border-radius:12px;background:#fff;outline:none;width:230px}
+.tool-search input:focus{border-color:var(--red)}
+.tool-select{font:600 14px var(--fb);padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;outline:none}
+.tbl-wrap{overflow:auto}
+table.tbl{width:100%;border-collapse:collapse;min-width:780px}
+.tbl th{text-align:left;font:800 10.5px var(--fb);letter-spacing:.11em;text-transform:uppercase;color:var(--mut);padding:14px 16px;border-bottom:2px solid var(--line);white-space:nowrap}
+.tbl td{padding:13px 16px;border-bottom:1px solid #F2EEE3;font-size:14px;font-weight:600;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:background .15s}
+.tbl tbody tr:hover{background:#FFFEF8}
+.t-img{width:54px;height:48px;border-radius:10px;background:#FFF6D9;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.t-img img{max-width:88%;max-height:88%;object-fit:contain}
+.t-img img.custom{width:100%;height:100%;object-fit:cover}
+.t-name strong{display:block;font-size:14px}
+.t-name small{color:var(--mut);font-weight:700;font-size:11.5px}
+.t-price s{color:var(--mut);font-weight:700;font-size:12px;margin-left:5px}
+.t-disc{display:inline-block;font:800 11px var(--fb);color:var(--red-d);background:#FDECEC;border-radius:99px;padding:3px 9px;margin-top:4px}
+.row-actions{display:flex;gap:7px;justify-content:flex-end}
+.empty-row{padding:44px!important;text-align:center;color:var(--mut);font-weight:700}
+.pill{display:inline-flex;align-items:center;font:800 11px var(--fb);letter-spacing:.06em;padding:5px 11px;border-radius:99px;white-space:nowrap}
+.pl-red{background:var(--red);color:#fff}.pl-yel{background:var(--yellow);color:var(--char)}
+.pl-org{background:#FBE3CC;color:#8a4d10}.pl-grn{background:#DCF3E6;color:#1d6b3e}
+.pl-chr{background:var(--char);color:#fff}.pl-gry{background:#EAE6DB;color:#6b655b}
+.pl-out{background:#fff;border:1.5px solid var(--green);color:#1d6b3e}
+
+/* status select */
+.st-sel{font:700 12.5px var(--fb);padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:#fff;outline:none}
+/* categories */
+.cat-add{display:flex;gap:10px;margin-bottom:18px;max-width:460px}
+.cat-add input{flex:1}
+.cat-row{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid #F2EEE3;flex-wrap:wrap}
+.cat-row:last-child{border-bottom:none}
+.cat-row .c-name{font:500 17px var(--fd);min-width:150px}
+.cat-row input{font:600 15px var(--fb);padding:8px 11px;border:2px solid var(--red);border-radius:9px;outline:none}
+.cat-count{font-size:12.5px;font-weight:800;color:var(--mut)}
+.cat-row .row-actions{margin-left:auto}
+/* settings */
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.set-sec{margin-bottom:26px}
+.set-sec h3{font:600 17px var(--fd);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.set-sec h3 svg{width:18px;height:18px;color:var(--red)}
+.logo-drop{display:flex;gap:16px;align-items:center}
+.logo-prev{width:76px;height:76px;border-radius:18px;background:var(--cream);border:2px dashed #D9D2C2;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.logo-prev img{width:100%;height:100%;object-fit:cover}
+/* dashboard recent */
+.ro-row{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px dashed #EAE5D6}
+.ro-row:last-child{border-bottom:none}
+.ro-no{font:600 15px var(--fd);min-width:84px}
+.ro-row .grow2{flex:1;font-weight:700;font-size:13.5px}
+/* modal / drawer */
+.modal-ov{position:fixed;inset:0;background:rgba(31,31,31,.55);z-index:120;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:.25s}
+.modal-ov.open{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:22px;width:100%;max-height:94vh;overflow-y:auto;transform:translateY(24px) scale(.97);transition:.3s cubic-bezier(.34,1.3,.64,1)}
+.modal-ov.open .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1.5px solid var(--line);position:sticky;top:0;background:#fff;z-index:2;border-radius:22px 22px 0 0}
+.modal-head h3{font:600 20px var(--fd)}
+.modal-body{padding:24px;display:flex;flex-direction:column;gap:16px}
+.modal-foot{display:flex;justify-content:flex-end;gap:11px;padding:18px 24px;border-top:1.5px solid var(--line)}
+.img-pick{display:flex;gap:14px;align-items:flex-start}
+.img-prev{width:110px;height:92px;border-radius:14px;background:var(--cream);border:2px dashed #D9D2C2;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.img-prev img{width:100%;height:100%;object-fit:cover}
+.img-prev img.contain{object-fit:contain;padding:8px}
+.img-btns{display:flex;flex-direction:column;gap:9px;flex:1}
+.switch-row{display:flex;gap:22px;flex-wrap:wrap}
+.switch-row label{display:flex;align-items:center;gap:9px;font:700 13.5px var(--fb)}
+/* order drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);background:#fff;z-index:130;transform:translateX(105%);transition:.35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(31,31,31,.2)}
+.drawer.open{transform:none}
+.drawer-body{flex:1;overflow-y:auto;padding:22px 24px}
+.od-sec{margin-bottom:20px}
+.od-sec h4{font:600 14px var(--fd);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.od-item{display:flex;gap:11px;align-items:center;padding:8px 0;border-bottom:1px dashed #EAE5D6;font-size:13.5px;font-weight:700}
+.od-item .t-img{width:44px;height:40px}
+.od-item span:nth-child(2){flex:1}
+.tot-d{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;color:#57524a;padding:3px 0}
+.tot-d.big{font:600 17px var(--fd);color:var(--char);border-top:1.5px dashed var(--line);margin-top:7px;padding-top:9px}
+.confirm-modal{max-width:420px;text-align:center;padding:34px 30px}
+.confirm-modal .cm-ic{width:64px;height:64px;border-radius:50%;background:#FDECEC;color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.confirm-modal .cm-ic svg{width:28px;height:28px}
+.confirm-modal h3{font:600 21px var(--fd);margin-bottom:8px}
+.confirm-modal p{color:#6b655b;font-weight:700;font-size:14px;margin-bottom:22px}
+/* toasts */
+.fy-toasts{position:fixed;bottom:22px;right:22px;z-index:400;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.fy-toast{display:flex;align-items:center;gap:10px;background:var(--char);color:#fff;font:700 13.5px var(--fb);padding:13px 18px;border-radius:14px;box-shadow:var(--sh-lg);opacity:0;transform:translateY(12px);transition:.3s;max-width:340px}
+.fy-toast.show{opacity:1;transform:none}
+.fy-toast .dot{width:9px;height:9px;border-radius:50%;background:var(--yellow);flex:none}
+.fy-toast.err .dot{background:var(--red)}
+
+@media (max-width:960px){
+  .side{transform:translateX(-105%)}
+  .side.open{transform:none}
+  .main{margin-left:0}
+  .side-toggle{display:inline-flex}
+  .content{padding:20px 16px 40px}
+  .topbar{padding:14px 16px}
+  .notif-panel{right:16px}
+  .set-grid{grid-template-columns:1fr}
+  .f-2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div class="login-view" id="loginView">
+  <div class="login-card">
+    <div class="lc-brand">
+      <svg viewBox="0 0 44 44" width="58" height="58"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+      <h1>Frenchy<b>’s</b> Panel</h1>
+      <span class="lc-sub">Restaurant management console</span>
+    </div>
+    <form id="loginForm">
+      <div class="login-err" id="loginErr">Wrong username or password.</div>
+      <div class="field"><label>Username</label><input id="loginUser" autocomplete="username" placeholder="admin"></div>
+      <div class="field"><label>Password</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+      <button class="btn btn-red" style="width:100%">SIGN IN</button>
+    </form>
+    <div class="lc-hint">Demo access — user: <b>admin</b> · password: <b>frenchy123</b><br>(replace with real server-side auth in production)</div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="appView">
+  <aside class="side" id="side">
+    <div class="side-brand">
+      <svg viewBox="0 0 44 44" width="42" height="42"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+      <span>Frenchy’s Panel<small>MANAGEMENT</small></span>
+    </div>
+    <nav class="side-nav">
+      <button data-view="dashboard" class="active"><i data-lucide="layout-dashboard"></i>Dashboard</button>
+      <button data-view="products"><i data-lucide="package"></i>Products</button>
+      <button data-view="coming"><i data-lucide="hourglass"></i>Coming Soon</button>
+      <button data-view="deals"><i data-lucide="badge-percent"></i>Deals</button>
+      <button data-view="orders"><i data-lucide="receipt"></i>Orders</button>
+      <button data-view="categories"><i data-lucide="tags"></i>Categories</button>
+      <button data-view="settings"><i data-lucide="settings"></i>Settings</button>
+      <button id="logoutBtn" class="side-logout"><i data-lucide="log-out"></i>Logout</button>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn side-toggle" id="sideToggle" aria-label="Open sidebar"><i data-lucide="menu"></i></button>
+      <h1 id="viewTitle">Dashboard</h1>
+      <button class="icon-btn bell" id="bellBtn" aria-label="Notifications"><i data-lucide="bell"></i><span class="n-badge" id="notifBadge">0</span></button>
+      <div class="avatar" id="avatar">F</div>
+      <div class="notif-panel" id="notifPanel">
+        <div class="np-head"><span>Notifications</span><button id="markRead">Mark all read</button></div>
+        <div class="np-list" id="notifList"></div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- DASHBOARD -->
+      <section class="view" id="view-dashboard">
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="card panel">
+          <h3>Latest orders</h3>
+          <div id="recentOrders"></div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="view" id="view-products" hidden>
+        <div class="toolbar">
+          <div class="tool-search"><i data-lucide="search"></i><input id="pSearch" placeholder="Search products…"></div>
+          <select class="tool-select" id="pCatFilter"></select>
+          <span class="grow"></span>
+          <button class="btn btn-red" id="addProduct"><i data-lucide="plus"></i>ADD PRODUCT</button>
+        </div>
+        <div class="card tbl-wrap"><table class="tbl"><thead><tr>
+          <th>Product</th><th>Category</th><th>Pricing</th><th>Available</th><th>Visible</th><th>Featured</th><th style="text-align:right">Actions</th>
+        </tr></thead><tbody id="pTbody"></tbody></table></div>
+      </section>
+
+      <!-- COMING SOON -->
+      <section class="view" id="view-coming" hidden>
+        <div class="toolbar">
+          <span class="grow"></span>
+          <button class="btn btn-red" id="addComing"><i data-lucide="plus"></i>ADD COMING SOON PRODUCT</button>
+        </div>
+        <div class="card tbl-wrap"><table class="tbl"><thead><tr>
+          <th>Product</th><th>Category</th><th>Launch date</th><th>Price</th><th>Status</th><th style="text-align:right">Actions</th>
+        </tr></thead><tbody id="cTbody"></tbody></table></div>
+      </section>
+
+      <!-- DEALS -->
+      <section class="view" id="view-deals" hidden>
+        <div class="toolbar">
+          <span class="grow"></span>
+          <button class="btn btn-red" id="addDeal"><i data-lucide="plus"></i>ADD DEAL</button>
+        </div>
+        <div class="card tbl-wrap"><table class="tbl"><thead><tr>
+          <th>Deal</th><th>Pricing</th><th>Active</th><th style="text-align:right">Actions</th>
+        </tr></thead><tbody id="dTbody"></tbody></table></div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="view" id="view-orders" hidden>
+        <div class="toolbar" id="orderChips"></div>
+        <div class="card tbl-wrap"><table class="tbl"><thead><tr>
+          <th>Order</th><th>Customer</th><th>Type</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th style="text-align:right">Details</th>
+        </tr></thead><tbody id="oTbody"></tbody></table></div>
+      </section>
+
+      <!-- CATEGORIES -->
+      <section class="view" id="view-categories" hidden>
+        <div class="cat-add">
+          <input id="newCatName" placeholder="New category name…" onkeydown="if(event.key==='Enter')addCategory()">
+          <button class="btn btn-red" onclick="addCategory()"><i data-lucide="plus"></i>ADD</button>
+        </div>
+        <div class="card" id="catList"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings" hidden>
+        <div class="card panel" style="max-width:760px">
+          <div class="set-sec">
+            <h3><i data-lucide="store"></i>Restaurant</h3>
+            <div class="set-grid">
+              <div class="field"><label>Restaurant name</label><input id="sName"></div>
+              <div class="field"><label>Phone</label><input id="sPhone"></div>
+              <div class="field"><label>Email</label><input id="sEmail"></div>
+              <div class="field"><label>Opening hours</label><input id="sHours"></div>
+              <div class="field" style="grid-column:1/-1"><label>Address</label><input id="sAddress"></div>
+            </div>
+          </div>
+          <div class="set-sec">
+            <h3><i data-lucide="bike"></i>Ordering</h3>
+            <div class="set-grid">
+              <div class="field"><label>Delivery fee</label><input id="sFee" type="number" step="0.01" min="0"></div>
+              <div class="field"><label>Minimum order</label><input id="sMin" type="number" step="0.01" min="0"></div>
+              <div class="field"><label>Tax (%)</label><input id="sTax" type="number" step="0.1" min="0"></div>
+              <div class="field"><label>Currency symbol</label><input id="sCur" maxlength="4"></div>
+            </div>
+          </div>
+          <div class="set-sec">
+            <h3><i data-lucide="image"></i>Brand logo</h3>
+            <div class="logo-drop">
+              <div class="logo-prev" id="logoPrev"></div>
+              <div class="img-btns">
+                <input type="file" id="sLogoFile" accept="image/*" style="font-weight:700;font-size:12.5px">
+                <button class="btn btn-ghost btn-sm" id="sLogoClear" style="align-self:flex-start">Reset to default logo</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:6px">
+            <button class="btn btn-red" id="saveSettings">SAVE SETTINGS</button>
+            <button class="btn btn-ghost" id="previewSite" onclick="window.open('index.html','_blank')">OPEN CUSTOMER SITE</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ================= PRODUCT MODAL ================= -->
+<div class="modal-ov" id="pModal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-head"><h3 id="pModalTitle">Add product</h3><button class="icon-btn" data-close="pModal"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label>Product name</label><input id="pName" placeholder="e.g. Classic Frenchy Burger"></div>
+      <div class="field"><label>Description</label><textarea id="pDesc" rows="2" placeholder="Short, tasty description…"></textarea></div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Price</label><input id="pPrice" type="number" step="0.01" min="0" placeholder="5.99"></div>
+        <div class="field"><label>Old price <small>(optional)</small></label><input id="pOld" type="number" step="0.01" min="0" placeholder="8.99"></div>
+      </div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Discount % <small>(auto from prices)</small></label><input id="pDisc" type="number" min="0" max="99" placeholder="e.g. 22"></div>
+        <div class="field"><label>Category</label><select id="pCat"></select></div>
+      </div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>SKU</label><input id="pSku" placeholder="FR-BUR-01"></div>
+      </div>
+      <div class="field"><label>Product image</label>
+        <div class="img-pick">
+          <div class="img-prev" id="pImgPrev"></div>
+          <div class="img-btns">
+            <input type="file" id="pImgFile" accept="image/*" style="font-weight:700;font-size:12.5px">
+            <input id="pImgUrl" placeholder="…or paste an image URL">
+            <button class="btn btn-ghost btn-sm" id="pImgClear" style="align-self:flex-start">Use brand artwork</button>
+          </div>
+        </div>
+      </div>
+      <div class="switch-row">
+        <label><input type="checkbox" class="sw" id="pAvail" checked> Available</label>
+        <label><input type="checkbox" class="sw" id="pVis" checked> Visible on site</label>
+        <label><input type="checkbox" class="sw" id="pFeat"> Featured</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="pModal">CANCEL</button>
+      <button class="btn btn-red" id="pSave"><i data-lucide="check"></i>SAVE PRODUCT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= COMING SOON MODAL ================= -->
+<div class="modal-ov" id="cModal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-head"><h3 id="cModalTitle">Add coming soon product</h3><button class="icon-btn" data-close="cModal"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label>Product name</label><input id="cName" placeholder="e.g. Spicy Frenchy Burger"></div>
+      <div class="field"><label>Description</label><textarea id="cDesc" rows="2"></textarea></div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Category</label><select id="cCat"></select></div>
+        <div class="field"><label>Launch date</label><input id="cLaunch" type="date"></div>
+      </div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Price <small>(optional)</small></label><input id="cPrice" type="number" step="0.01" min="0"></div>
+        <div class="field"><label>Status</label>
+          <select id="cStatus">
+            <option value="coming">COMING SOON — shown on site</option>
+            <option value="hidden">HIDDEN — not shown</option>
+            <option value="active">ACTIVE — publish to menu</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Image</label>
+        <div class="img-pick">
+          <div class="img-prev" id="cImgPrev"></div>
+          <div class="img-btns">
+            <input type="file" id="cImgFile" accept="image/*" style="font-weight:700;font-size:12.5px">
+            <input id="cImgUrl" placeholder="…or paste an image URL">
+            <button class="btn btn-ghost btn-sm" id="cImgClear" style="align-self:flex-start">Use brand artwork</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="cModal">CANCEL</button>
+      <button class="btn btn-red" id="cSave"><i data-lucide="check"></i>SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DEAL MODAL ================= -->
+<div class="modal-ov" id="dModal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-head"><h3 id="dModalTitle">Add deal</h3><button class="icon-btn" data-close="dModal"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <div class="field"><label>Deal title</label><input id="dTitle" placeholder="e.g. Family Feast Box"></div>
+      <div class="field"><label>Description</label><textarea id="dDesc" rows="2"></textarea></div>
+      <div class="f-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>Deal price</label><input id="dPrice" type="number" step="0.01" min="0"></div>
+        <div class="field"><label>Old price <small>(optional)</small></label><input id="dOld" type="number" step="0.01" min="0"></div>
+      </div>
+      <div class="field"><label>Image</label>
+        <div class="img-pick">
+          <div class="img-prev" id="dImgPrev"></div>
+          <div class="img-btns">
+            <input type="file" id="dImgFile" accept="image/*" style="font-weight:700;font-size:12.5px">
+            <input id="dImgUrl" placeholder="…or paste an image URL">
+            <button class="btn btn-ghost btn-sm" id="dImgClear" style="align-self:flex-start">Use brand artwork</button>
+          </div>
+        </div>
+      </div>
+      <div class="switch-row"><label><input type="checkbox" class="sw" id="dEnabled" checked> Deal active on site</label></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="dModal">CANCEL</button>
+      <button class="btn btn-red" id="dSave"><i data-lucide="check"></i>SAVE DEAL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ORDER DRAWER ================= -->
+<aside class="drawer" id="oDrawer">
+  <div class="modal-head"><h3 id="odNo">Order</h3><button class="icon-btn" onclick="closeOrder()"><i data-lucide="x"></i></button></div>
+  <div class="drawer-body" id="odBody"></div>
+</aside>
+
+<!-- ================= CONFIRM ================= -->
+<div class="modal-ov" id="confirmOv">
+  <div class="modal confirm-modal">
+    <div class="cm-ic"><i data-lucide="trash-2"></i></div>
+    <h3 id="cmTitle">Delete this item?</h3>
+    <p id="cmMsg"></p>
+    <div style="display:flex;gap:11px;justify-content:center">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-red" id="cmYes">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= FRENCHY’S SHARED CORE (identical to index.html) ================= */
+const FY = (() => {
+  const K = { products:'fy_products', categories:'fy_categories', coming:'fy_coming', deals:'fy_deals',
+              orders:'fy_orders', notifs:'fy_notifs', settings:'fy_settings', cart:'fy_cart', otype:'fy_otype', ocounter:'fy_ocounter' };
+  const uid  = () => 'fy' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  let toastWrap;
+  function toast(msg, type='ok'){
+    if(!toastWrap){ toastWrap = document.createElement('div'); toastWrap.className='fy-toasts'; document.body.appendChild(toastWrap); }
+    const t = document.createElement('div'); t.className = 'fy-toast' + (type==='err' ? ' err':'');
+    t.innerHTML = '<span class="dot"></span><span>' + msg + '</span>';
+    toastWrap.appendChild(t);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=> t.remove(), 320); }, 3400);
+  }
+  const get = (k, fb) => { try { const v = localStorage.getItem(k); return v === null ? fb : JSON.parse(v); } catch(e){ return fb; } };
+  const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ toast('Browser storage is full — change not saved.', 'err'); return false; } };
+  const CATS = ['Burgers','Chicken','Fries & Sides','Wraps','Drinks','Desserts','Kids Meals'].map(n => ({ id: slug(n), name: n, visible: true }));
+  function P(name, desc, price, old, cat, sku, featured){
+    return { id: slug(name), name, desc, price, oldPrice: old || 0,
+      discount: old && old > price ? Math.round((1 - price/old) * 100) : 0,
+      category: cat, img: '', sku, available: true, featured: !!featured, visible: true };
+  }
+  const SEED_PRODUCTS = [
+    P("Classic Frenchy Burger","Flame-grilled beef, melted cheese, crisp lettuce & our secret Frenchy sauce.",5.99,0,'burgers','FR-BUR-01',true),
+    P("Double Cheese Smash","Two smashed beef patties, double cheddar, pickles & smoky mayo.",7.99,8.99,'burgers','FR-BUR-02',true),
+    P("Smokehouse Bacon Burger","Beef patty, crispy bacon, onion rings & a smoky BBQ glaze on a toasted bun.",8.49,0,'burgers','FR-BUR-03',false),
+    P("Crispy Chicken Burger","Golden fried chicken fillet, crunchy slaw & creamy mayo.",6.49,0,'chicken','FR-CHK-01',true),
+    P("Nashville Hot Chicken","Fiery glazed crispy chicken, pickles & cooling ranch.",7.29,8.29,'chicken','FR-CHK-02',false),
+    P("Chicken Tenders (5 pc)","Hand-breaded tenders with your choice of dip.",5.49,0,'chicken','FR-CHK-03',false),
+    P("Golden French Fries","Crisp, golden and lightly salted — the classic side.",2.49,0,'fries-sides','FR-SID-01',false),
+    P("Loaded Cheese Fries","Golden fries smothered in cheddar sauce & crispy onions.",3.99,0,'fries-sides','FR-SID-02',true),
+    P("Cheesy Nuggets (8 pc)","Molten cheese bites with a crunchy golden coating.",4.29,0,'fries-sides','FR-SID-03',false),
+    P("Grilled Chicken Wrap","Grilled chicken, crisp salad & garlic yogurt in a soft tortilla.",6.99,0,'wraps','FR-WRP-01',false),
+    P("Crispy Veggie Wrap","Crumbed veggie patty, avocado & tangy slaw.",5.99,0,'wraps','FR-WRP-02',false),
+    P("Chocolate Shake","Thick, creamy shake blended with real cocoa.",3.49,0,'drinks','FR-DRK-01',true),
+    P("Strawberry Shake","Classic strawberry shake topped with cream.",3.49,0,'drinks','FR-DRK-02',false),
+    P("Sparkling Lemonade","Fresh-squeezed lemonade over crushed ice.",2.29,0,'drinks','FR-DRK-03',false),
+    P("Iced Cola","Ice-cold cola with a guaranteed fizz.",1.99,0,'drinks','FR-DRK-04',false),
+    P("Churros Bites","Cinnamon-dusted churros with a warm chocolate dip.",3.29,0,'desserts','FR-DSR-01',false),
+    P("Vanilla Sundae","Creamy soft-serve with caramel drizzle & crunchy topping.",2.99,0,'desserts','FR-DSR-02',false),
+    P("Junior Cheeseburger Box","Mini burger, small fries & juice — made for little foodies.",4.99,0,'kids-meals','FR-KID-01',true),
+    P("Tenders & Juice Box","Two mini tenders, fries & an apple juice.",5.49,0,'kids-meals','FR-KID-02',false)
+  ];
+  const SEED_DEALS = [
+    { id:'deal-feast', title:'Family Feast Box', desc:'2 Classic burgers, 2 crispy chicken burgers, 2 fries, 4 drinks & a churros to share.', price:19.99, oldPrice:26.99, img:'', enabled:true },
+    { id:'deal-duo',   title:'Burger Duo Combo', desc:'Any 2 classic burgers + 1 large fries + 2 drinks.', price:12.49, oldPrice:15.99, img:'', enabled:true },
+    { id:'deal-lunch', title:'Lunch Express',    desc:'1 wrap + small fries + any soft drink. Ready in 5 minutes.', price:8.99, oldPrice:10.99, img:'', enabled:true }
+  ];
+  const days = n => new Date(Date.now() + n*864e5).toISOString().slice(0,10);
+  const SEED_COMING = [
+    { id:'cs-spicy', name:'Spicy Frenchy Burger', desc:'Our classic turned up — jalapeño crunch, spicy Frenchy sauce & pepper-jack cheese.', category:'burgers', launch: days(21), price:7.49, img:'', status:'coming' },
+    { id:'cs-froyo', name:'Caramel Froyo Crunch', desc:'Frozen yogurt swirl with caramel ribbons & honey granola clusters.', category:'desserts', launch: days(38), price:4.29, img:'', status:'coming' }
+  ];
+  const DEFAULT_SETTINGS = { name:"Frenchy's", logo:'', phone:'+1 (555) 013-4477', email:'hello@frenchys.example',
+    address:'48 Crunch Street, Flavor Town, FT 10422', hours:'Mon – Sun · 10:00 AM – 11:00 PM',
+    deliveryFee:2.99, minOrder:10, tax:8.5, currency:'$' };
+  function ensureSeed(){
+    if(get(K.categories) === null) put(K.categories, CATS);
+    if(get(K.products)   === null) put(K.products, SEED_PRODUCTS);
+    if(get(K.deals)      === null) put(K.deals, SEED_DEALS);
+    if(get(K.coming)     === null) put(K.coming, SEED_COMING);
+    if(get(K.orders)     === null) put(K.orders, []);
+    if(get(K.notifs)     === null) put(K.notifs, []);
+    if(get(K.ocounter)   === null) put(K.ocounter, 1041);
+    if(get(K.settings)   === null) put(K.settings, DEFAULT_SETTINGS);
+  }
+  ensureSeed();
+  const db = {
+    products:   () => get(K.products, []),   saveProducts:   v => put(K.products, v),
+    categories: () => get(K.categories, []), saveCategories: v => put(K.categories, v),
+    coming:     () => get(K.coming, []),     saveComing:     v => put(K.coming, v),
+    deals:      () => get(K.deals, []),      saveDeals:      v => put(K.deals, v),
+    orders:     () => get(K.orders, []),     saveOrders:     v => put(K.orders, v),
+    notifs:     () => get(K.notifs, []),     saveNotifs:     v => put(K.notifs, v),
+    settings:   () => Object.assign({}, DEFAULT_SETTINGS, get(K.settings, {})),
+    saveSettings: v => put(K.settings, v),
+    nextOrderNo: () => { const n = get(K.ocounter, 1041) + 1; put(K.ocounter, n); return 'FR-' + n; }
+  };
+  const KEYS = Object.values(K);
+  window.addEventListener('storage', e => {
+    if(KEYS.includes(e.key)) document.dispatchEvent(new CustomEvent('fy:data', { detail:{ key: e.key } }));
+  });
+  const cart = { items: () => get(K.cart, []), save: v => put(K.cart, v),
+                 type: () => get(K.otype, 'delivery'), setType: t => put(K.otype, t) };
+  const fmt = n => db.settings().currency + (Math.round(n * 100) / 100).toFixed(2);
+  function fileToImage(file, cb, max = 720){
+    const r = new FileReader();
+    r.onload = () => { const img = new Image();
+      img.onload = () => { const sc = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', .82)); };
+      img.src = r.result; };
+    r.readAsDataURL(file);
+  }
+  const SH = '<ellipse cx="100" cy="146" rx="60" ry="9" fill="rgba(31,31,31,.10)"/>';
+  const ART = {
+    burgers(){ return SH +
+      '<rect x="46" y="118" width="108" height="20" rx="10" fill="#E8A33D"/>' +
+      '<rect x="42" y="100" width="116" height="20" rx="10" fill="#7A4A21"/>' +
+      '<circle cx="72" cy="110" r="2.4" fill="#935B2B"/><circle cx="104" cy="106" r="2.4" fill="#935B2B"/><circle cx="130" cy="112" r="2.4" fill="#935B2B"/>' +
+      '<path d="M40 92 H160 V102 L148 112 136 102 124 112 112 102 100 112 88 102 76 112 64 102 52 112 40 102 Z" fill="#FFC72C"/>' +
+      '<path d="M36 88 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 v6 H36 Z" fill="#6CBF3E"/>' +
+      '<rect x="52" y="76" width="96" height="9" rx="4.5" fill="#E23B2E"/>' +
+      '<path d="M44 82 Q44 30 100 30 Q156 30 156 82 Z" fill="#F2A93B"/>' +
+      '<ellipse cx="80" cy="55" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(-22 80 55)"/>' +
+      '<ellipse cx="100" cy="46" rx="4.2" ry="2.6" fill="#FFE3AD"/>' +
+      '<ellipse cx="120" cy="55" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(22 120 55)"/>' +
+      '<ellipse cx="90" cy="68" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(-10 90 68)"/>' +
+      '<ellipse cx="112" cy="68" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(10 112 68)"/>'; },
+    chicken(){ return SH +
+      '<line x1="122" y1="98" x2="156" y2="124" stroke="#FFF4E1" stroke-width="15" stroke-linecap="round"/>' +
+      '<circle cx="160" cy="127" r="11" fill="#FFF4E1"/><circle cx="149" cy="135" r="9" fill="#FFF4E1"/>' +
+      '<path d="M52 34 Q104 12 136 44 Q164 74 138 102 Q108 128 74 104 Q36 76 52 34 Z" fill="#C97F35"/>' +
+      '<circle cx="82" cy="58" r="5" fill="#B06A26"/><circle cx="104" cy="70" r="4.4" fill="#B06A26"/><circle cx="70" cy="80" r="4.4" fill="#B06A26"/><circle cx="108" cy="46" r="4" fill="#B06A26"/>' +
+      '<path d="M66 40 Q86 28 104 36" stroke="#E3A054" stroke-width="6" fill="none" stroke-linecap="round"/>'; },
+    'fries-sides'(){ return SH +
+      '<g fill="#FFC72C">' +
+      '<rect x="58" y="36" width="13" height="58" rx="6" transform="rotate(-18 64 64)"/>' +
+      '<rect x="72" y="26" width="13" height="66" rx="6" transform="rotate(-9 78 58)"/>' +
+      '<rect x="90" y="18" width="13" height="74" rx="6"/>' +
+      '<rect x="108" y="24" width="13" height="66" rx="6" transform="rotate(9 114 56)"/>' +
+      '<rect x="124" y="34" width="13" height="56" rx="6" transform="rotate(18 130 62)"/></g>' +
+      '<path d="M56 74 H144 L132 142 H68 Z" fill="#D71920"/>' +
+      '<path d="M56 74 H144 L142 90 H58 Z" fill="#B4121A"/>' +
+      '<circle cx="88" cy="107" r="4.6" fill="#fff"/><circle cx="112" cy="107" r="4.6" fill="#fff"/>' +
+      '<path d="M86 118 Q100 130 114 118" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>'; },
+    wraps(){ return SH +
+      '<rect x="26" y="62" width="128" height="44" rx="22" fill="#EFD7A6"/>' +
+      '<path d="M56 66 v36 M82 64 v40 M108 64 v40" stroke="#DFBE82" stroke-width="5" stroke-linecap="round"/>' +
+      '<ellipse cx="152" cy="84" rx="17" ry="22" fill="#E4C48C"/><ellipse cx="152" cy="84" rx="8.5" ry="13" fill="#D8B273"/>' +
+      '<rect x="16" y="58" width="14" height="10" rx="4.5" fill="#FFC72C"/>' +
+      '<rect x="14" y="72" width="16" height="10" rx="4.5" fill="#6CBF3E"/>' +
+      '<rect x="16" y="86" width="15" height="9" rx="4.5" fill="#E23B2E"/>'; },
+    drinks(o){ const top = (o && o.top) || '#FFF3DC'; return SH +
+      '<rect x="94" y="10" width="11" height="46" rx="5" fill="#FFC72C" transform="rotate(10 100 33)"/>' +
+      '<path d="M64 52 Q100 26 136 52 Z" fill="' + top + '"/>' +
+      '<rect x="58" y="50" width="84" height="12" rx="6" fill="#E9E2D6"/>' +
+      '<path d="M62 62 L72 140 H128 L138 62 Z" fill="#D71920"/>' +
+      '<path d="M65 88 L135 88 L132 110 L68 110 Z" fill="#FFC72C"/>' +
+      '<path d="M76 70 h6 l-4 62 h-6 z" fill="rgba(255,255,255,.22)"/>'; },
+    desserts(){ return SH +
+      '<path d="M72 90 L82 140 H118 L128 90 Z" fill="#BEE3F0"/>' +
+      '<rect x="68" y="84" width="64" height="9" rx="4.5" fill="#A6D6E6"/>' +
+      '<ellipse cx="100" cy="82" rx="34" ry="14" fill="#FFF3DC"/><ellipse cx="100" cy="64" rx="26" ry="12" fill="#FFF3DC"/><ellipse cx="100" cy="48" rx="17" ry="10" fill="#FFF3DC"/>' +
+      '<path d="M100 42 q2 -9 11 -11" stroke="#FFF3DC" stroke-width="7" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="88" cy="62" r="2.2" fill="#D71920"/><circle cx="110" cy="66" r="2.2" fill="#6CBF3E"/><circle cx="100" cy="52" r="2.2" fill="#FFC72C"/>' +
+      '<circle cx="100" cy="34" r="7" fill="#D71920"/>' +
+      '<path d="M100 28 q3 -8 10 -9" stroke="#7A4A21" stroke-width="3" fill="none" stroke-linecap="round"/>'; },
+    'kids-meals'(){ return SH +
+      '<rect x="76" y="32" width="11" height="42" rx="5" fill="#FFC72C" transform="rotate(-8 81 53)"/>' +
+      '<rect x="95" y="26" width="11" height="48" rx="5" fill="#FFC72C"/>' +
+      '<rect x="114" y="34" width="11" height="40" rx="5" fill="#FFC72C" transform="rotate(9 119 54)"/>' +
+      '<path d="M52 66 H148 L138 142 H62 Z" fill="#FFC72C"/>' +
+      '<path d="M52 66 H148 L146 84 H54 Z" fill="#D71920"/>' +
+      '<polygon points="100,92 106,106 121,107 110,117 113,131 100,123 87,131 90,117 79,107 94,106" fill="#D71920"/>'; }
+  };
+  const DRINK_TOPS = [['choc','#7A4A2B'],['straw','#F49AB0'],['cola','#E9E2D6'],['lemon','#FFE08A']];
+  function art(kind, name){
+    let inner;
+    if(kind === 'drinks' && name){
+      const n = name.toLowerCase(); const hit = DRINK_TOPS.find(d => n.includes(d[0]));
+      inner = ART.drinks({ top: hit ? hit[1] : '#FFF3DC' });
+    } else inner = (ART[kind] || ART.burgers)();
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160">' + inner + '</svg>');
+  }
+  function comboArt(){
+    return 'data:image/svg+xml,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">' +
+      '<g transform="translate(0,66) scale(.58)">' + ART.burgers() + '</g>' +
+      '<g transform="translate(104,72) scale(.58)">' + ART['fries-sides']() + '</g>' +
+      '<g transform="translate(178,64) scale(.6)">' + ART.drinks({}) + '</g></svg>');
+  }
+  return { K, db, cart, fmt, uid, slug, toast, fileToImage, art, comboArt, DEFAULT_SETTINGS };
+})();
+
+/* ================= ADMIN PANEL ================= */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const icons = () => { if(window.lucide) lucide.createIcons(); };
+const catName = id => { const c = FY.db.categories().find(c => c.id === id); return c ? c.name : 'Specials'; };
+const pImg = p => p.img || FY.art(p.category, p.name);
+const dealImg = d => d.img || FY.comboArt();
+
+let currentView = 'dashboard';
+let editProductId = null, editComingId = null, editDealId = null, currentOrderId = null;
+let pFilter = { q:'', cat:'all' }, oFilter = 'ALL';
+let seenOrders = new Set(FY.db.orders().map(o => o.id));
+
+/* ---------- auth ---------- */
+const ADMIN_USER = 'admin', ADMIN_PASS = 'frenchy123'; /* demo only — use real server-side auth in production */
+ $('#loginForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if($('#loginUser').value.trim() === ADMIN_USER && $('#loginPass').value === ADMIN_PASS){
+    sessionStorage.setItem('fy_admin','1'); showApp();
+  } else $('#loginErr').classList.add('show');
+});
+function showApp(){
+  $('#loginView').style.display = 'none';
+  $('#appView').classList.add('on');
+  $('#avatar').textContent = (FY.db.settings().name[0] || 'F').toUpperCase();
+  refreshAll(); icons();
+}
+ $('#logoutBtn').onclick = () => { sessionStorage.removeItem('fy_admin'); location.reload(); };
+if(sessionStorage.getItem('fy_admin')) showApp();
+
+/* ---------- navigation ---------- */
+const TITLES = { dashboard:'Dashboard', products:'Products', coming:'Coming Soon Products', deals:'Deals', orders:'Orders', categories:'Categories', settings:'Settings' };
+ $$('.side-nav button[data-view]').forEach(b => b.onclick = () => {
+  currentView = b.dataset.view;
+  $$('.side-nav button').forEach(x => x.classList.toggle('active', x === b));
+  $$('.view').forEach(v => v.hidden = v.id !== 'view-' + currentView);
+  $('#viewTitle').textContent = TITLES[currentView];
+  $('#side').classList.remove('open');
+  refreshView();
+});
+ $('#sideToggle').onclick = () => $('#side').classList.toggle('open');
+
+/* ---------- modals ---------- */
+function openModal(id){ $('#' + id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id){ $('#' + id).classList.remove('open'); document.body.style.overflow = ''; }
+ $$('[data-close]').forEach(b => b.onclick = () => closeModal(b.dataset.close));
+ $$('.modal-ov').forEach(ov => ov.addEventListener('click', e => { if(e.target === ov){ ov.classList.remove('open'); document.body.style.overflow=''; } }));
+let confirmCb = null;
+function askConfirm(msg, cb){ $('#cmMsg').textContent = msg; confirmCb = cb; $('#confirmOv').classList.add('open'); }
+function closeConfirm(){ $('#confirmOv').classList.remove('open'); confirmCb = null; }
+ $('#cmYes').onclick = () => { if(confirmCb) confirmCb(); closeConfirm(); };
+
+/* ---------- image pickers ---------- */
+function wireImgPicker(fileId, urlId, prevId, clearBtnId, onClear){
+  let val = '';
+  const prev = $('#' + prevId);
+  function paint(isCustom){
+    prev.innerHTML = val ? '<img class="' + (isCustom ? '' : 'contain') + '" src="' + val + '">' : '<span style="color:var(--mut);font:700 11px var(--fb)">BRAND ART</span>';
+  }
+  $('#' + fileId).addEventListener('change', e => {
+    const f = e.target.files[0]; if(!f) return;
+    FY.fileToImage(f, d => { val = d; paint(true); });
+    e.target.value = '';
+  });
+  $('#' + urlId).addEventListener('input', e => { val = e.target.value.trim(); paint(true); });
+  $('#' + clearBtnId).onclick = () => { val = ''; $('#' + urlId).value = ''; paint(false); onClear && onClear(); };
+  return { set(v){ val = v || ''; $('#' + urlId).value = (v && !v.startsWith('data:')) ? v : ''; paint(!!val); }, get: () => val };
+}
+const pImgPick = wireImgPicker('pImgFile','pImgUrl','pImgPrev','pImgClear');
+const cImgPick = wireImgPicker('cImgFile','cImgUrl','cImgPrev','cImgClear');
+const dImgPick = wireImgPicker('dImgFile','dImgUrl','dImgPrev','dImgClear');
+
+/* ================= DASHBOARD ================= */
+function refreshView(){
+  ({ dashboard:renderDash, products:renderProducts, coming:renderComingA, deals:renderDealsA,
+     orders:renderOrders, categories:renderCats, settings:renderSettingsForm }[currentView] || (()=>{}))();
+  renderNotifs(); icons();
+}
+function refreshAll(){ refreshView(); }
+const STATUS_PILL = { NEW:'pl-red', CONFIRMED:'pl-yel', PREPARING:'pl-org', READY:'pl-out', 'OUT FOR DELIVERY':'pl-chr', DELIVERED:'pl-grn', CANCELLED:'pl-gry' };
+function renderDash(){
+  const prods = FY.db.products(), orders = FY.db.orders(), today = new Date().toDateString();
+  const todayOrders = orders.filter(o => new Date(o.date).toDateString() === today);
+  const todaySales = todayOrders.filter(o => o.status !== 'CANCELLED').reduce((s,o) => s + o.total, 0);
+  const stats = [
+    ['Total Products', prods.length, 'package', '#FDECEC', 'var(--red)'],
+    ['Active Products', prods.filter(p => p.available && p.visible !== false).length, 'check', '#DCF3E6', 'var(--green)'],
+    ['Coming Soon', FY.db.coming().filter(c => c.status === 'coming').length, 'hourglass', '#FFF6D9', '#B8860B'],
+    ['Total Orders', orders.length, 'receipt', '#F2EEE0', 'var(--char)'],
+    ['Today’s Orders', todayOrders.length, 'calendar', '#FDECEC', 'var(--red)'],
+    ['Today’s Sales', FY.fmt(todaySales), 'wallet', '#FFF6D9', '#B8860B']
+  ];
+  $('#statGrid').innerHTML = stats.map(s =>
+    '<div class="stat card"><span class="s-ic" style="background:' + s[3] + ';color:' + s[4] + '"><i data-lucide="' + s[2] + '"></i></span>' +
+    '<div><b>' + s[1] + '</b><span>' + s[0] + '</span></div></div>').join('');
+  const recent = orders.slice(0, 5);
+  $('#recentOrders').innerHTML = recent.length ? recent.map(o =>
+    '<div class="ro-row"><span class="ro-no">' + o.no + '</span><span class="grow2">' + o.customer.name + ' · ' + o.items.reduce((a,i)=>a+i.qty,0) + ' items</span>' +
+    '<span class="pill ' + (STATUS_PILL[o.status] || 'pl-gry') + '">' + o.status + '</span>' +
+    '<b style="min-width:76px;text-align:right">' + FY.fmt(o.total) + '</b></div>').join('')
+    : '<p style="color:var(--mut);font-weight:700;padding:14px 0">No orders yet — they’ll appear here the moment a customer checks out.</p>';
+}
+
+/* ================= PRODUCTS ================= */
+function fillCatSelect(sel, allLabel){
+  const cats = FY.db.categories();
+  sel.innerHTML = (allLabel ? '<option value="all">' + allLabel + '</option>' : '') +
+    cats.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('');
+}
+function renderProducts(){
+  fillCatSelect($('#pCatFilter'), 'All categories');
+  $('#pCatFilter').value = pFilter.cat;
+  const q = pFilter.q.toLowerCase();
+  const list = FY.db.products().filter(p =>
+    (pFilter.cat === 'all' || p.category === pFilter.cat) &&
+    (!q || (p.name + ' ' + p.sku).toLowerCase().includes(q)));
+  $('#pTbody').innerHTML = list.length ? list.map(p => {
+    const disc = p.discount > 0 ? p.discount : (p.oldPrice > p.price ? Math.round((1 - p.price/p.oldPrice)*100) : 0);
+    return '<tr>' +
+      '<td><div style="display:flex;gap:12px;align-items:center"><span class="t-img"><img class="' + (p.img?'custom':'') + '" src="' + pImg(p) + '"></span>' +
+      '<span class="t-name"><strong>' + p.name + '</strong><small>' + p.sku + (p.featured ? ' · FEATURED' : '') + '</small></span></div></td>' +
+      '<td>' + catName(p.category) + '</td>' +
+      '<td>' + FY.fmt(p.price) + (p.oldPrice > p.price ? '<s>' + FY.fmt(p.oldPrice) + '</s>' : '') + (disc ? '<br><span class="t-disc">-' + disc + '%</span>' : '') + '</td>' +
+      '<td><input type="checkbox" class="sw" ' + (p.available?'checked':'') + ' data-tog="available" data-id="' + p.id + '"></td>' +
+      '<td><input type="checkbox" class="sw" ' + (p.visible !== false?'checked':'') + ' data-tog="visible" data-id="' + p.id + '"></td>' +
+      '<td><input type="checkbox" class="sw" ' + (p.featured?'checked':'') + ' data-tog="featured" data-id="' + p.id + '"></td>' +
+      '<td><div class="row-actions">' +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-edit="' + p.id + '" title="Edit"><i data-lucide="pencil"></i></button>' +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-del="' + p.id + '" title="Delete" style="color:var(--red)"><i data-lucide="trash-2"></i></button>' +
+      '</div></td></tr>';
+  }).join('') : '<tr><td colspan="7" class="empty-row">No products found — add your first one.</td></tr>';
+  icons();
+}
+ $('#pSearch').addEventListener('input', e => { pFilter.q = e.target.value; renderProducts(); });
+ $('#pCatFilter').addEventListener('change', e => { pFilter.cat = e.target.value; renderProducts(); });
+ $('#pTbody').addEventListener('change', e => {
+  const t = e.target.closest('[data-tog]'); if(!t) return;
+  const prods = FY.db.products(); const p = prods.find(x => x.id === t.dataset.id); if(!p) return;
+  p[t.dataset.tog] = t.checked; FY.db.saveProducts(prods);
+  FY.toast('“' + p.name + '” updated — live on the customer site.');
+});
+ $('#pTbody').addEventListener('click', e => {
+  const ed = e.target.closest('[data-edit]'); if(ed){ openProductModal(ed.dataset.edit); return; }
+  const dl = e.target.closest('[data-del]');
+  if(dl) askConfirm('This product will be removed from the menu permanently.', () => {
+    const prods = FY.db.products().filter(p => p.id !== dl.dataset.del);
+    FY.db.saveProducts(prods); FY.toast('Product deleted.'); renderProducts(); });
+});
+function openProductModal(id){
+  editProductId = id || null;
+  fillCatSelect($('#pCat'));
+  const p = id ? FY.db.products().find(x => x.id === id) : null;
+  $('#pModalTitle').textContent = p ? 'Edit product' : 'Add product';
+  $('#pName').value = p ? p.name : '';   $('#pDesc').value = p ? p.desc : '';
+  $('#pPrice').value = p ? p.price : ''; $('#pOld').value = p && p.oldPrice ? p.oldPrice : '';
+  $('#pDisc').value = p ? (p.discount || '') : '';
+  $('#pCat').value = p ? p.category : (FY.db.categories()[0] || {}).id;
+  $('#pSku').value = p ? p.sku : '';
+  $('#pAvail').checked = p ? p.available : true;
+  $('#pVis').checked  = p ? p.visible !== false : true;
+  $('#pFeat').checked = p ? !!p.featured : false;
+  pImgPick.set(p ? p.img : '');
+  openModal('pModal'); icons();
+}
+ $('#addProduct').onclick = () => openProductModal(null);
+/* auto discount */
+let discTouched = false;
+ $('#pDisc').addEventListener('input', () => discTouched = true);
+['pPrice','pOld'].forEach(id => $('#' + id).addEventListener('input', () => {
+  if(discTouched) return;
+  const pr = parseFloat($('#pPrice').value), old = parseFloat($('#pOld').value);
+  $('#pDisc').value = (old > pr && pr > 0) ? Math.round((1 - pr/old)*100) : '';
+}));
+ $('#pSave').onclick = () => {
+  const name = $('#pName').value.trim(), price = parseFloat($('#pPrice').value);
+  if(name.length < 2 || !(price > 0)){ FY.toast('Please enter a name and a valid price.', 'err'); return; }
+  const old = parseFloat($('#pOld').value) || 0;
+  let disc = parseInt($('#pDisc').value) || 0;
+  if(old > price && !disc) disc = Math.round((1 - price/old)*100);
+  if(old <= price) disc = 0;
+  const data = { name, desc: $('#pDesc').value.trim(), price, oldPrice: old > price ? old : 0, discount: disc,
+    category: $('#pCat').value, sku: $('#pSku').value.trim() || 'FR-' + Math.random().toString(36).slice(2,7).toUpperCase(),
+    img: pImgPick.get(), available: $('#pAvail').checked, visible: $('#pVis').checked, featured: $('#pFeat').checked };
+  const prods = FY.db.products();
+  if(editProductId){
+    Object.assign(prods.find(p => p.id === editProductId), data);
+    FY.toast('Product saved — live on the customer site.');
+  } else {
+    data.id = FY.slug(name) || FY.uid();
+    if(prods.some(p => p.id === data.id)) data.id = FY.uid();
+    prods.unshift(data);
+    FY.toast('Product added — now visible on the customer site.');
+  }
+  FY.db.saveProducts(prods); closeModal('pModal'); renderProducts();
+};
+
+/* ================= COMING SOON ================= */
+function renderComingA(){
+  const list = FY.db.coming();
+  $('#cTbody').innerHTML = list.length ? list.map(c => {
+    const pill = c.status === 'coming' ? '<span class="pill pl-yel">COMING SOON</span>'
+      : c.status === 'active' ? '<span class="pill pl-grn">ACTIVE</span>' : '<span class="pill pl-gry">HIDDEN</span>';
+    const tog = c.status !== 'active'
+      ? '<button class="btn btn-ghost btn-sm" data-cs-tog="' + c.id + '">' + (c.status === 'coming' ? 'DISABLE' : 'ENABLE') + '</button>' +
+        (c.status === 'coming' ? '<button class="btn btn-yellow btn-sm" data-cs-pub="' + c.id + '">PUBLISH</button>' : '')
+      : '<span class="pill pl-grn" style="border:none">ON MENU</span>';
+    return '<tr>' +
+      '<td><div style="display:flex;gap:12px;align-items:center"><span class="t-img"><img class="' + (c.img?'custom':'') + '" src="' + (c.img || FY.art(c.category, c.name)) + '"></span>' +
+      '<span class="t-name"><strong>' + c.name + '</strong><small>' + (c.desc || '').slice(0,46) + '…</small></span></div></td>' +
+      '<td>' + catName(c.category) + '</td>' +
+      '<td>' + c.launch + '</td>' +
+      '<td>' + (c.price > 0 ? FY.fmt(c.price) : '—') + '</td>' +
+      '<td>' + pill + '</td>' +
+      '<td><div class="row-actions">' + tog +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-cs-edit="' + c.id + '"><i data-lucide="pencil"></i></button>' +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-cs-del="' + c.id + '" style="color:var(--red)"><i data-lucide="trash-2"></i></button>' +
+      '</div></td></tr>';
+  }).join('') : '<tr><td colspan="6" class="empty-row">No coming soon products — the section stays hidden on the site.</td></tr>';
+  icons();
+}
+ $('#addComing').onclick = () => {
+  editComingId = null;
+  fillCatSelect($('#cCat'));
+  $('#cModalTitle').textContent = 'Add coming soon product';
+  $('#cName').value = ''; $('#cDesc').value = ''; $('#cPrice').value = '';
+  $('#cLaunch').value = new Date(Date.now() + 21*864e5).toISOString().slice(0,10);
+  $('#cStatus').value = 'coming';
+  cImgPick.set('');
+  openModal('cModal'); icons();
+};
+ $('#cTbody').addEventListener('click', e => {
+  const ed = e.target.closest('[data-cs-edit]');
+  if(ed){
+    const c = FY.db.coming().find(x => x.id === ed.dataset.csEdit); if(!c) return;
+    editComingId = c.id; fillCatSelect($('#cCat'));
+    $('#cModalTitle').textContent = 'Edit coming soon product';
+    $('#cName').value = c.name; $('#cDesc').value = c.desc; $('#cPrice').value = c.price || '';
+    $('#cLaunch').value = c.launch; $('#cStatus').value = c.status; $('#cCat').value = c.category;
+    cImgPick.set(c.img);
+    openModal('cModal'); icons(); return;
+  }
+  const pub = e.target.closest('[data-cs-pub]');
+  if(pub){
+    const list = FY.db.coming(); const c = list.find(x => x.id === pub.dataset.csPub); if(!c) return;
+    const prods = FY.db.products();
+    prods.unshift({ id: FY.uid(), name: c.name, desc: c.desc, price: c.price || 0, oldPrice: 0, discount: 0,
+      category: c.category, img: c.img, sku: 'FR-NEW-' + Math.random().toString(36).slice(2,6).toUpperCase(),
+      available: true, featured: false, visible: true });
+    FY.db.saveProducts(prods);
+    FY.db.saveComing(list.filter(x => x.id !== c.id));
+    FY.toast('“' + c.name + '” published to the live menu.'); renderComingA(); return;
+  }
+  const tog = e.target.closest('[data-cs-tog]');
+  if(tog){
+    const list = FY.db.coming(); const c = list.find(x => x.id === tog.dataset.csTog); if(!c) return;
+    c.status = c.status === 'coming' ? 'hidden' : 'coming';
+    FY.db.saveComing(list); FY.toast(c.status === 'coming' ? 'Now visible in Coming Soon.' : 'Hidden from the customer site.');
+    renderComingA(); return;
+  }
+  const dl = e.target.closest('[data-cs-del]');
+  if(dl) askConfirm('This coming soon product will be deleted permanently.', () => {
+    FY.db.saveComing(FY.db.coming().filter(x => x.id !== dl.dataset.csDel));
+    FY.toast('Deleted.'); renderComingA(); });
+});
+ $('#cSave').onclick = () => {
+  const name = $('#cName').value.trim();
+  if(name.length < 2){ FY.toast('Please enter a product name.', 'err'); return; }
+  const status = $('#cStatus').value;
+  const data = { name, desc: $('#cDesc').value.trim(), category: $('#cCat').value,
+    launch: $('#cLaunch').value || new Date().toISOString().slice(0,10),
+    price: parseFloat($('#cPrice').value) || 0, img: cImgPick.get() };
+  const list = FY.db.coming();
+  if(status === 'active'){ /* publish straight to the menu */
+    const prods = FY.db.products();
+    prods.unshift({ id: FY.uid(), name, desc: data.desc, price: data.price, oldPrice: 0, discount: 0,
+      category: data.category, img: data.img, sku: 'FR-NEW-' + Math.random().toString(36).slice(2,6).toUpperCase(),
+      available: true, featured: false, visible: true });
+    FY.db.saveProducts(prods);
+    FY.db.saveComing(editComingId ? list.filter(x => x.id !== editComingId) : list);
+    FY.toast('“' + name + '” published to the live menu.');
+  } else if(editComingId){
+    Object.assign(list.find(x => x.id === editComingId), data, { status });
+    FY.db.saveComing(list); FY.toast('Saved — customer site updated.');
+  } else {
+    data.id = FY.uid(); data.status = status; list.unshift(data);
+    FY.db.saveComing(list); FY.toast('Coming soon product added.');
+  }
+  closeModal('cModal'); renderComingA();
+};
+
+/* ================= DEALS ================= */
+function renderDealsA(){
+  const list = FY.db.deals();
+  $('#dTbody').innerHTML = list.length ? list.map(d => {
+    const disc = d.oldPrice > d.price ? Math.round((1 - d.price/d.oldPrice)*100) : 0;
+    return '<tr>' +
+      '<td><div style="display:flex;gap:12px;align-items:center"><span class="t-img"><img class="' + (d.img?'custom':'') + '" src="' + dealImg(d) + '"></span>' +
+      '<span class="t-name"><strong>' + d.title + '</strong><small>' + (d.desc||'').slice(0,52) + '…</small></span></div></td>' +
+      '<td>' + FY.fmt(d.price) + (d.oldPrice > d.price ? '<s>' + FY.fmt(d.oldPrice) + '</s>' : '') + (disc ? '<br><span class="t-disc">-' + disc + '%</span>' : '') + '</td>' +
+      '<td><input type="checkbox" class="sw" ' + (d.enabled?'checked':'') + ' data-d-tog="' + d.id + '"></td>' +
+      '<td><div class="row-actions">' +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-d-edit="' + d.id + '"><i data-lucide="pencil"></i></button>' +
+        '<button class="btn btn-ghost btn-ic btn-sm" data-d-del="' + d.id + '" style="color:var(--red)"><i data-lucide="trash-2"></i></button>' +
+      '</div></td></tr>';
+  }).join('') : '<tr><td colspan="4" class="empty-row">No deals yet.</td></tr>';
+  icons();
+}
+ $('#dTbody').addEventListener('change', e => {
+  const t = e.target.closest('[data-d-tog]'); if(!t) return;
+  const list = FY.db.deals(); const d = list.find(x => x.id === t.dataset.dTog);
+  d.enabled = t.checked; FY.db.saveDeals(list);
+  FY.toast(d.enabled ? 'Deal is now live on the site.' : 'Deal hidden from the site.');
+});
+ $('#dTbody').addEventListener('click', e => {
+  const ed = e.target.closest('[data-d-edit]');
+  if(ed){
+    const d = FY.db.deals().find(x => x.id === ed.dataset.dEdit);
+    editDealId = d.id; $('#dModalTitle').textContent = 'Edit deal';
+    $('#dTitle').value = d.title; $('#dDesc').value = d.desc;
+    $('#dPrice').value = d.price; $('#dOld').value = d.oldPrice || '';
+    $('#dEnabled').checked = !!d.enabled; dImgPick.set(d.img);
+    openModal('dModal'); icons(); return;
+  }
+  const dl = e.target.closest('[data-d-del]');
+  if(dl) askConfirm('This deal will be deleted permanently.', () => {
+    FY.db.saveDeals(FY.db.deals().filter(x => x.id !== dl.dataset.dDel));
+    FY.toast('Deal deleted.'); renderDealsA(); });
+});
+ $('#addDeal').onclick = () => {
+  editDealId = null; $('#dModalTitle').textContent = 'Add deal';
+  $('#dTitle').value = ''; $('#dDesc').value = ''; $('#dPrice').value = ''; $('#dOld').value = '';
+  $('#dEnabled').checked = true; dImgPick.set('');
+  openModal('dModal'); icons();
+};
+ $('#dSave').onclick = () => {
+  const title = $('#dTitle').value.trim(), price = parseFloat($('#dPrice').value);
+  if(title.length < 2 || !(price > 0)){ FY.toast('Enter a title and a valid price.', 'err'); return; }
+  const old = parseFloat($('#dOld').value) || 0;
+  const data = { title, desc: $('#dDesc').value.trim(), price, oldPrice: old > price ? old : 0,
+    img: dImgPick.get(), enabled: $('#dEnabled').checked };
+  const list = FY.db.deals();
+  if(editDealId){ Object.assign(list.find(d => d.id === editDealId), data); FY.toast('Deal saved — live on the site.'); }
+  else { data.id = FY.uid(); list.unshift(data); FY.toast('Deal added — live on the site.'); }
+  FY.db.saveDeals(list); closeModal('dModal'); renderDealsA();
+};
+
+/* ================= ORDERS ================= */
+function renderOrders(){
+  const statuses = ['ALL','NEW','CONFIRMED','PREPARING','READY','OUT FOR DELIVERY','DELIVERED','CANCELLED'];
+  $('#orderChips').innerHTML = statuses.map(s =>
+    '<button class="btn btn-sm ' + (oFilter === s ? 'btn-dark' : 'btn-ghost') + '" data-of="' + s + '">' + s + '</button>').join('');
+  const list = FY.db.orders().filter(o => oFilter === 'ALL' || o.status === oFilter);
+  $('#oTbody').innerHTML = list.length ? list.map(o => {
+    const d = new Date(o.date);
+    return '<tr>' +
+      '<td><strong>' + o.no + '</strong></td>' +
+      '<td>' + o.customer.name + '<br><small style="color:var(--mut)">' + o.customer.phone + '</small></td>' +
+      '<td>' + (o.type === 'delivery' ? 'Delivery' : 'Pickup') + '</td>' +
+      '<td><strong>' + FY.fmt(o.total) + '</strong></td>' +
+      '<td><span class="pill ' + (o.paymentStatus === 'Paid' ? 'pl-grn' : 'pl-gry') + '">' + o.paymentStatus + '</span><br><small style="color:var(--mut)">' + o.payment + '</small></td>' +
+      '<td><select class="st-sel" data-o-status="' + o.id + '">' +
+        ['NEW','CONFIRMED','PREPARING','READY','OUT FOR DELIVERY','DELIVERED','CANCELLED']
+        .map(s => '<option ' + (o.status === s ? 'selected' : '') + '>' + s + '</option>').join('') + '</select></td>' +
+      '<td><small style="color:var(--mut)">' + d.toLocaleDateString() + '<br>' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + '</small></td>' +
+      '<td><div class="row-actions"><button class="btn btn-ghost btn-ic btn-sm" data-o-view="' + o.id + '"><i data-lucide="chevron-right"></i></button></div></td></tr>';
+  }).join('') : '<tr><td colspan="8" class="empty-row">No orders in this view yet.</td></tr>';
+  icons();
+}
+ $('#orderChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-of]'); if(!b) return;
+  oFilter = b.dataset.of; renderOrders();
+});
+ $('#oTbody').addEventListener('change', e => {
+  const s = e.target.closest('[data-o-status]'); if(!s) return;
+  const list = FY.db.orders(); const o = list.find(x => x.id === s.dataset.oStatus);
+  o.status = s.value; FY.db.saveOrders(list);
+  FY.toast('Order ' + o.no + ' → ' + o.status);
+  if(currentView === 'dashboard') renderDash();
+});
+ $('#oTbody').addEventListener('click', e => {
+  const v = e.target.closest('[data-o-view]'); if(!v) return;
+  openOrder(v.dataset.oView);
+});
+function openOrder(id){
+  const o = FY.db.orders().find(x => x.id === id); if(!o) return;
+  currentOrderId = id;
+  $('#odNo').textContent = 'Order ' + o.no;
+  const d = new Date(o.date);
+  $('#odBody').innerHTML =
+    '<div class="od-sec"><span class="pill ' + (STATUS_PILL[o.status] || 'pl-gry') + '" style="margin-right:8px">' + o.status + '</span>' +
+    '<span class="pill ' + (o.paymentStatus === 'Paid' ? 'pl-grn' : 'pl-gry') + '">' + o.payment + ' · ' + o.paymentStatus + '</span></div>' +
+    '<div class="od-sec"><h4>Customer</h4>' +
+    '<div class="tot-d"><span>Name</span><span>' + o.customer.name + '</span></div>' +
+    '<div class="tot-d"><span>Phone</span><span>' + o.customer.phone + '</span></div>' +
+    '<div class="tot-d"><span>Email</span><span style="word-break:break-all">' + o.customer.email + '</span></div>' +
+    (o.type === 'delivery' ? '<div class="tot-d"><span>Address</span><span style="text-align:right;max-width:65%">' + o.customer.address + '</span></div>' : '') +
+    '<div class="tot-d"><span>Order type</span><span>' + o.type.charAt(0).toUpperCase() + o.type.slice(1) + '</span></div>' +
+    '<div class="tot-d"><span>Date</span><span>' + d.toLocaleString() + '</span></div></div>' +
+    '<div class="od-sec"><h4>Items</h4>' +
+    o.items.map(i => '<div class="od-item"><span class="t-img"><img class="' + (i.custom?'custom':'') + '" src="' + i.img + '"></span>' +
+      '<span>' + i.name + ' × ' + i.qty + '</span><span>' + FY.fmt(i.price * i.qty) + '</span></div>').join('') + '</div>' +
+    '<div class="od-sec"><h4>Totals</h4>' +
+    '<div class="tot-d"><span>Subtotal</span><span>' + FY.fmt(o.subtotal) + '</span></div>' +
+    '<div class="tot-d"><span>Delivery fee</span><span>' + FY.fmt(o.fee) + '</span></div>' +
+    '<div class="tot-d"><span>Tax</span><span>' + FY.fmt(o.tax) + '</span></div>' +
+    '<div class="tot-d big"><span>Total</span><span>' + FY.fmt(o.total) + '</span></div></div>' +
+    '<div class="od-sec"><h4>Update</h4>' +
+    '<div class="field" style="margin-bottom:12px"><label>Order status</label><select id="odStatus">' +
+      ['NEW','CONFIRMED','PREPARING','READY','OUT FOR DELIVERY','DELIVERED','CANCELLED']
+      .map(s => '<option ' + (o.status === s ? 'selected' : '') + '>' + s + '</option>').join('') + '</select></div>' +
+    '<button class="btn ' + (o.paymentStatus === 'Paid' ? 'btn-ghost' : 'btn-yellow') + '" id="odPaid" style="width:100%">' +
+      (o.paymentStatus === 'Paid' ? 'PAYMENT: PAID — MARK AS PENDING' : 'MARK PAYMENT AS PAID') + '</button></div>';
+  icons();
+  $('#odStatus').onchange = e => {
+    const list = FY.db.orders(); const oo = list.find(x => x.id === id);
+    oo.status = e.target.value; FY.db.saveOrders(list);
+    FY.toast('Order ' + oo.no + ' → ' + oo.status); renderOrders();
+  };
+  $('#odPaid').onclick = () => {
+    const list = FY.db.orders(); const oo = list.find(x => x.id === id);
+    oo.paymentStatus = oo.paymentStatus === 'Paid' ? 'Pending' : 'Paid';
+    FY.db.saveOrders(list); FY.toast('Payment status: ' + oo.paymentStatus);
+    openOrder(id); renderOrders();
+  };
+  $('#oDrawer').classList.add('open');
+}
+function closeOrder(){ $('#oDrawer').classList.remove('open'); }
+
+/* ================= CATEGORIES ================= */
+function renderCats(){
+  const cats = FY.db.categories(), prods = FY.db.products(), coming = FY.db.coming();
+  $('#catList').innerHTML = cats.map(c => {
+    const n = prods.filter(p => p.category === c.id).length + coming.filter(x => x.category === c.id).length;
+    return '<div class="cat-row" data-cid="' + c.id + '">' +
+      '<span class="c-name" id="cn-' + c.id + '">' + c.name + '</span>' +
+      '<span class="cat-count">' + n + ' item' + (n === 1 ? '' : 's') + '</span>' +
+      '<label style="display:flex;align-items:center;gap:8px;font:700 12.5px var(--fb);color:var(--mut)">' +
+      '<input type="checkbox" class="sw" ' + (c.visible !== false ? 'checked' : '') + ' data-c-vis="' + c.id + '"> Visible</label>' +
+      '<div class="row-actions">' +
+      '<button class="btn btn-ghost btn-ic btn-sm" data-c-ren="' + c.id + '"><i data-lucide="pencil"></i></button>' +
+      '<button class="btn btn-ghost btn-ic btn-sm" data-c-del="' + c.id + '" style="color:var(--red)"><i data-lucide="trash-2"></i></button>' +
+      '</div></div>';
+  }).join('');
+  icons();
+}
+function addCategory(){
+  const name = $('#newCatName').value.trim();
+  if(name.length < 2){ FY.toast('Enter a category name.', 'err'); return; }
+  const cats = FY.db.categories(); const id = FY.slug(name);
+  if(cats.some(c => c.id === id)){ FY.toast('That category already exists.', 'err'); return; }
+  cats.push({ id, name, visible: true });
+  FY.db.saveCategories(cats); $('#newCatName').value = '';
+  FY.toast('Category added.'); renderCats();
+}
+ $('#catList').addEventListener('change', e => {
+  const t = e.target.closest('[data-c-vis]'); if(!t) return;
+  const cats = FY.db.categories(); const c = cats.find(x => x.id === t.dataset.cVis);
+  c.visible = t.checked; FY.db.saveCategories(cats);
+  FY.toast(c.visible ? 'Category visible on the site.' : 'Category hidden from the site.');
+});
+ $('#catList').addEventListener('click', e => {
+  const ren = e.target.closest('[data-c-ren]');
+  if(ren){
+    const id = ren.dataset.cRen; const cell = $('#cn-' + id);
+    const old = cell.textContent;
+    cell.innerHTML = '<input value="' + old.replace(/"/g,'&quot;') + '" id="renIn">';
+    const inp = $('#renIn'); inp.focus(); inp.select();
+    const save = () => {
+      const v = inp.value.trim();
+      if(v.length >= 2 && v !== old){
+        const cats = FY.db.categories(); cats.find(x => x.id === id).name = v;
+        FY.db.saveCategories(cats); FY.toast('Category renamed.');
+      }
+      renderCats();
+    };
+    inp.addEventListener('keydown', ev => { if(ev.key === 'Enter') save(); if(ev.key === 'Escape') renderCats(); });
+    inp.addEventListener('blur', save);
+    return;
+  }
+  const del = e.target.closest('[data-c-del]');
+  if(del){
+    const id = del.dataset.cDel;
+    const used = FY.db.products().some(p => p.category === id) || FY.db.coming().some(x => x.category === id);
+    if(used){ FY.toast('Move or delete its products first — this category is still in use.', 'err'); return; }
+    askConfirm('Delete this category?', () => {
+      FY.db.saveCategories(FY.db.categories().filter(c => c.id !== id));
+      FY.toast('Category deleted.'); renderCats(); });
+  }
+});
+
+/* ================= SETTINGS ================= */
+let logoVal = null;
+function renderSettingsForm(){
+  const s = FY.db.settings();
+  $('#sName').value = s.name; $('#sPhone').value = s.phone; $('#sEmail').value = s.email;
+  $('#sHours').value = s.hours; $('#sAddress').value = s.address;
+  $('#sFee').value = s.deliveryFee; $('#sMin').value = s.minOrder; $('#sTax').value = s.tax; $('#sCur').value = s.currency;
+  logoVal = s.logo;
+  paintLogo();
+  $('#avatar').textContent = (s.name[0] || 'F').toUpperCase();
+}
+function paintLogo(){
+  $('#logoPrev').innerHTML = logoVal ? '<img src="' + logoVal + '">' :
+    '<svg viewBox="0 0 44 44" width="44" height="44"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
+}
+ $('#sLogoFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  FY.fileToImage(f, d => { logoVal = d; paintLogo(); }, 300);
+  e.target.value = '';
+});
+ $('#sLogoClear').onclick = () => { logoVal = ''; paintLogo(); };
+ $('#saveSettings').onclick = () => {
+  const s = FY.db.settings();
+  s.name = $('#sName').value.trim() || s.name;
+  s.phone = $('#sPhone').value.trim(); s.email = $('#sEmail').value.trim();
+  s.hours = $('#sHours').value.trim(); s.address = $('#sAddress').value.trim();
+  s.deliveryFee = parseFloat($('#sFee').value) || 0;
+  s.minOrder = parseFloat($('#sMin').value) || 0;
+  s.tax = parseFloat($('#sTax').value) || 0;
+  s.currency = $('#sCur').value.trim() || '$';
+  s.logo = logoVal || '';
+  FY.db.saveSettings(s);
+  $('#avatar').textContent = (s.name[0] || 'F').toUpperCase();
+  FY.toast('Settings saved — the customer site is updated.');
+};
+
+/* ================= NOTIFICATIONS ================= */
+function renderNotifs(){
+  const notifs = FY.db.notifs();
+  const unread = notifs.filter(n => !n.read).length;
+  const badge = $('#notifBadge');
+  badge.textContent = unread; badge.classList.toggle('on', unread > 0);
+  $('#notifList').innerHTML = notifs.length ? notifs.map(n => {
+    const d = new Date(n.time);
+    return '<div class="np-item' + (n.read ? '' : ' unread') + '" data-nid="' + n.id + '">' +
+      '<span class="np-ic"><i data-lucide="receipt"></i></span>' +
+      '<div><strong>New Order Received</strong>' +
+      '<small>' + n.no + ' · ' + n.name + ' · ' + FY.fmt(n.total) + ' · ' +
+      d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + '</small></div></div>';
+  }).join('') : '<div class="np-empty">No notifications yet.</div>';
+  icons();
+}
+ $('#bellBtn').onclick = e => { e.stopPropagation(); $('#notifPanel').classList.toggle('open'); };
+document.addEventListener('click', e => {
+  if(!e.target.closest('#notifPanel') && !e.target.closest('#bellBtn')) $('#notifPanel').classList.remove('open');
+});
+ $('#markRead').onclick = () => {
+  const notifs = FY.db.notifs(); notifs.forEach(n => n.read = true);
+  FY.db.saveNotifs(notifs); renderNotifs();
+};
+ $('#notifList').addEventListener('click', e => {
+  const it = e.target.closest('[data-nid]'); if(!it) return;
+  const notifs = FY.db.notifs(); const n = notifs.find(x => x.id === it.dataset.nid);
+  if(n) n.read = true; FY.db.saveNotifs(notifs);
+  $('#notifPanel').classList.remove('open');
+  oFilter = 'ALL';
+  $$('.side-nav button').forEach(x => x.classList.toggle('active', x.dataset.view === 'orders'));
+  $$('.view').forEach(v => v.hidden = v.id !== 'view-orders');
+  currentView = 'orders'; $('#viewTitle').textContent = 'Orders';
+  renderOrders(); renderNotifs(); icons();
+});
+function beep(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination); o.type = 'sine';
+    o.frequency.setValueAtTime(880, ctx.currentTime);
+    o.frequency.setValueAtTime(1318, ctx.currentTime + .13);
+    g.gain.setValueAtTime(.08, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .4);
+    o.start(); o.stop(ctx.currentTime + .4);
+  }catch(e){}
+}
+
+/* ================= LIVE SYNC (orders arrive from index.html) ================= */
+document.addEventListener('fy:data', e => {
+  const K = FY.K;
+  if(e.detail.key === K.orders){
+    const orders = FY.db.orders();
+    const fresh = orders.filter(o => !seenOrders.has(o.id));
+    if(fresh.length){
+      fresh.forEach(o => {
+        FY.toast('New Order Received — ' + o.no + ' · ' + o.customer.name + ' · ' + FY.fmt(o.total));
+        const d = new Date(o.date);
+        $('#viewTitle').textContent && beep();
+      });
+      fresh.forEach(o => seenOrders.add(o.id));
+    }
+  }
+  refreshView();
+});
+
+/* initial paint of whatever view is open */
+refreshView();
+</script>
+</body>
+</html>
