@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="crypto-eze-verification" content="f493032d1f2d5dee">
+<title>Frenchy’s — Good Food. Good Mood.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='10' fill='%23D71920'/%3E%3Ctext x='22' y='31' font-family='Arial' font-weight='900' font-size='24' fill='%23FFC72C' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --red:#D71920; --red-d:#B4121A; --yellow:#FFC72C; --char:#1F1F1F;
+  --cream:#FFF8E7; --gray:#F5F5F5; --line:#EFE7D6; --mut:#8B857A;
+  --sh:0 8px 26px rgba(31,31,31,.08); --sh-lg:0 20px 48px rgba(31,31,31,.15);
+  --fd:'Fredoka',sans-serif; --fb:'Nunito Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);color:var(--char);background:#fff;overflow-x:hidden}
+img{display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+section{scroll-margin-top:96px}
+::selection{background:var(--yellow)}
+
+/* ---------- buttons / badges ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 15px var(--fd);letter-spacing:.03em;padding:14px 28px;border-radius:999px;transition:transform .2s,box-shadow .2s,background .2s,color .2s}
+.btn:active{transform:scale(.96)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-d);transform:translateY(-2px);box-shadow:0 10px 22px rgba(215,25,32,.35)}
+.btn-yellow{background:var(--yellow);color:var(--char)}
+.btn-yellow:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,199,44,.45)}
+.btn-ghost{border:2px solid var(--char);color:var(--char);background:transparent}
+.btn-ghost:hover{background:var(--char);color:#fff;transform:translateY(-2px)}
+.btn-cream{background:#fff;color:var(--char);border:2px solid var(--line)}
+.btn-cream:hover{border-color:var(--char);transform:translateY(-2px)}
+.btn-sm{padding:10px 20px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.stick{display:inline-block;font:600 12px var(--fd);letter-spacing:.05em;padding:6px 13px;border-radius:999px;background:var(--red);color:#fff;transform:rotate(-3deg)}
+.stick.yel{background:var(--yellow);color:var(--char);box-shadow:2px 3px 0 rgba(31,31,31,.9);transform:rotate(3deg)}
+.icon-btn{width:42px;height:42px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:var(--char);transition:background .2s;position:relative}
+.icon-btn:hover{background:rgba(31,31,31,.07)}
+.icon-btn svg{width:21px;height:21px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:80;background:var(--cream);border-bottom:2px solid var(--char)}
+.head-in{display:flex;align-items:center;gap:26px;height:74px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:44px;height:44px;flex:none}
+.brand-icon img{width:44px;height:44px;border-radius:12px;object-fit:cover}
+.brand-name{font:600 24px var(--fd);letter-spacing:.01em}
+.brand-name b{color:var(--red);font-weight:600}
+.main-nav{display:flex;gap:6px;margin-left:8px}
+.main-nav a{font:500 15px var(--fd);padding:9px 16px;border-radius:999px;transition:.2s}
+.main-nav a:hover{background:var(--yellow);transform:translateY(-1px)}
+.head-actions{margin-left:auto;display:flex;align-items:center;gap:6px}
+.head-order{margin-left:6px}
+.burger{display:none}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:var(--red);color:#fff;font:800 11px var(--fb);display:flex;align-items:center;justify-content:center;border:2px solid var(--cream)}
+.cart-badge.bump{animation:bump .4s}
+@keyframes bump{40%{transform:scale(1.45)}}
+.search-bar{max-height:0;overflow:hidden;transition:max-height .3s ease;background:#fff}
+.search-bar.open{max-height:90px;border-top:1px solid var(--line)}
+.search-in{display:flex;align-items:center;gap:12px;padding:14px 24px}
+.search-in>svg{color:var(--mut)}
+.search-in input{flex:1;border:none;outline:none;font:600 17px var(--fb);background:transparent;color:var(--char)}
+
+/* mobile nav drawer */
+.m-nav{position:fixed;top:0;right:0;bottom:0;width:min(320px,86vw);background:var(--cream);z-index:110;transform:translateX(105%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:26px;display:flex;flex-direction:column;gap:6px;border-left:2px solid var(--char)}
+.m-nav.open{transform:none}
+.m-nav a{font:500 22px var(--fd);padding:14px 10px;border-bottom:1px solid var(--line)}
+.m-nav .btn{margin-top:18px}
+.m-nav .m-close{align-self:flex-end}
+
+/* ---------- hero ---------- */
+.hero{background:var(--cream);overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px;padding:64px 24px 84px;max-width:1200px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font:600 13px var(--fd);letter-spacing:.14em;color:var(--red);border:2px solid var(--red);padding:8px 16px;border-radius:999px;margin-bottom:22px}
+.eyebrow svg{width:15px;height:15px}
+.hero h1{font:700 clamp(2.7rem,5.6vw,4.5rem)/1.02 var(--fd);text-transform:uppercase;letter-spacing:.01em}
+.hero h1 .hl{display:inline-block;background:var(--yellow);padding:.02em .18em .06em;border-radius:.16em;transform:rotate(-1.6deg);box-shadow:4px 5px 0 var(--char);margin-top:.14em}
+.hero p{font-size:18px;line-height:1.65;color:#57524a;max-width:480px;margin:24px 0 30px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-trust{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.trust-chip{display:inline-flex;align-items:center;gap:8px;font:700 13px var(--fb);background:#fff;border:1px solid var(--line);padding:9px 15px;border-radius:99px;color:#57524a}
+.trust-chip svg{width:16px;height:16px;color:var(--red)}
+.hero-art{position:relative;display:flex;align-items:center;justify-content:center;min-height:460px}
+.blob{position:absolute;width:min(500px,92%);aspect-ratio:1;background:var(--red);border-radius:50%}
+.ring{position:absolute;width:76px;height:76px;border:7px solid var(--yellow);border-radius:50%;top:6%;right:4%;transform:translate(calc(var(--mx,0)*26px),calc(var(--my,0)*20px));transition:transform .25s ease-out}
+.dot-y{position:absolute;width:18px;height:18px;background:var(--yellow);border-radius:50%;bottom:12%;left:6%;transform:translate(calc(var(--mx,0)*34px),calc(var(--my,0)*26px));transition:transform .25s ease-out}
+.hero-burger{position:relative;width:min(430px,78%);transform:rotate(calc(var(--mx,0)*2.5deg));transition:transform .25s ease-out}
+.hlay{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.hbob{animation:bob var(--d,3.4s) ease-in-out var(--dl,0s) infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.hero-art:hover .hl1{transform:translateY(-13px)}
+.hero-art:hover .hl2{transform:translateY(-7px)}
+.hero-art:hover .hl3{transform:translateY(-3px)}
+.hero-art:hover .hl5{transform:translateY(5px)}
+.hero-art:hover .hl6{transform:translateY(11px)}
+.steam path{animation:steamy 2.8s ease-in-out infinite}
+.steam path:last-child{animation-delay:1.2s}
+@keyframes steamy{0%,100%{opacity:.12;transform:translateY(2px)}50%{opacity:.45;transform:translateY(-4px)}}
+.hf{position:absolute;filter:drop-shadow(0 16px 18px rgba(31,31,31,.18));transform:translate(calc(var(--mx,0)*var(--px,12)*1px),calc(var(--my,0)*var(--px,12)*1px)) rotate(var(--rot,0deg));transition:transform .25s ease-out;animation:bob 4.2s ease-in-out infinite}
+.hf-fries{width:158px;top:0;left:-2%;--px:18;--rot:-12deg}
+.hf-cup{width:122px;bottom:2%;right:-2%;--px:14;--rot:8deg;animation-delay:1.4s}
+
+/* ticker */
+.ticker{background:var(--yellow);overflow:hidden;transform:rotate(-1.2deg) scale(1.02);margin:-26px 0 -6px;position:relative;z-index:2}
+.ticker-track{display:flex;white-space:nowrap;animation:tick 22s linear infinite;padding:13px 0}
+.ticker-track span{font:600 15px var(--fd);letter-spacing:.16em;color:var(--char);padding-right:12px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ---------- section headings ---------- */
+.sec-head{max-width:640px;margin-bottom:38px}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.kicker{font:600 13px var(--fd);letter-spacing:.2em;color:var(--red);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;margin-bottom:10px}
+.kicker::before{content:'';width:26px;height:3px;background:var(--red);border-radius:2px}
+.sec-head h2{font:600 clamp(1.9rem,3.4vw,2.7rem)/1.1 var(--fd)}
+.sec-head p{color:#57524a;margin-top:10px;font-size:16px}
+
+
+/* ---------- google reviews ---------- */
+function renderGoogleReviews(){
+  const s = FY.db.settings();
+  const url = (s.googleReviewUrl || '').trim();
+  const rating = (s.googleRating || '').trim();
+  const count = (s.googleReviewCount || '').trim();
+  const ratingBox = $('#reviewRating');
+  const ratingEl = $('#googleRating');
+  const countEl = $('#googleReviewCount');
+  const btn = $('#googleReviewBtn');
+  const note = $('#googleReviewNote');
+  if(rating && ratingBox && ratingEl && countEl){
+    ratingBox.hidden = false;
+    ratingEl.textContent = rating;
+    countEl.textContent = count ? count + ' Google reviews' : 'Google reviews';
+  }else if(ratingBox){
+    ratingBox.hidden = true;
+  }
+  if(url){
+    btn.href = url;
+    btn.classList.remove('btn-ghost');
+    btn.classList.add('btn-red');
+    note.textContent = 'Opens your Google Business Profile review page.';
+  }else{
+    btn.href = '#reviews';
+    btn.classList.remove('btn-red');
+    btn.classList.add('btn-ghost');
+    note.textContent = 'Google review link not configured yet.';
+  }
+  if(rating) $('#reviewIntro').textContent = 'See the latest feedback and open your Google Business Profile review page.';
+}
+
+/* ---------- menu ---------- */
+#menu{padding:84px 0 90px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+.chip{font:500 14px var(--fd);padding:10px 20px;border-radius:999px;border:2px solid var(--line);background:#fff;color:#57524a;transition:.2s}
+.chip:hover{border-color:var(--char);color:var(--char)}
+.chip.active{background:var(--char);border-color:var(--char);color:var(--yellow)}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:26px}
+.p-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--sh);border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.p-card:hover{transform:translateY(-6px);box-shadow:var(--sh-lg)}
+.p-img{position:relative;height:192px;display:flex;align-items:center;justify-content:center;padding:16px}
+.p-img img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(31,31,31,.14));transition:transform .3s}
+.p-img img.custom{width:100%;height:100%;object-fit:cover;border-radius:14px;filter:none}
+.p-card:hover .p-img img{transform:scale(1.06) rotate(-2deg)}
+.p-img .stick{position:absolute;top:12px;left:12px}
+.p-img .stick.pop{left:auto;right:12px;background:var(--yellow);color:var(--char);transform:rotate(3deg);box-shadow:2px 3px 0 rgba(31,31,31,.9)}
+.p-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.p-cat{font:800 11px var(--fb);letter-spacing:.13em;text-transform:uppercase;color:var(--red-d);margin-bottom:6px}
+.p-body h3{font:500 19px var(--fd);margin-bottom:6px}
+.p-desc{font-size:13.5px;line-height:1.55;color:#6b655b;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:14px}
+.p-foot{margin-top:auto;display:flex;align-items:center;gap:10px}
+.price{font:600 22px var(--fd);color:var(--red)}
+.old{color:#9a948a;text-decoration:line-through;font-weight:800;font-size:14px}
+.add-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--char);color:#fff;font:500 14px var(--fd);padding:10px 18px;border-radius:999px;transition:.2s}
+.add-btn svg{width:16px;height:16px}
+.add-btn:hover{background:var(--red);transform:translateY(-2px)}
+.p-card.soldout .p-img img{filter:grayscale(1);opacity:.55}
+.sold-btn{margin-left:auto;font:600 13px var(--fd);color:#9a948a;border:2px dashed #D9D2C2;padding:9px 18px;border-radius:999px}
+.empty-note{grid-column:1/-1;text-align:center;padding:60px 20px;color:#6b655b;font-size:16px}
+.fly-dot{position:fixed;z-index:300;width:16px;height:16px;border-radius:50%;background:var(--yellow);border:2px solid var(--char);pointer-events:none;transition:transform .55s cubic-bezier(.2,.7,.3,1),opacity .55s}
+
+/* ---------- deals ---------- */
+#deals{background:var(--cream);padding:84px 0 90px}
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.deal-hero{grid-column:1/-1;background:var(--red);color:#fff;border-radius:26px;overflow:hidden;display:grid;grid-template-columns:1.05fr .95fr;box-shadow:var(--sh-lg)}
+.deal-hero .d-txt{padding:40px 44px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.deal-hero h3{font:600 clamp(1.7rem,2.6vw,2.4rem) var(--fd)}
+.deal-hero p{color:#ffd9d5;line-height:1.6;max-width:460px}
+.d-price{display:flex;align-items:baseline;gap:12px;margin-top:4px}
+.d-now{font:600 34px var(--fd);color:var(--yellow)}
+.d-was{color:#ffb3ae;text-decoration:line-through;font-weight:800}
+.deal-hero .stick{align-self:flex-start;background:var(--yellow);color:var(--char);transform:rotate(-2deg)}
+.deal-hero .btn{align-self:flex-start;margin-top:8px;background:var(--char);color:#fff}
+.deal-hero .btn:hover{background:#000}
+.d-art{background:#C2171E;display:flex;align-items:center;justify-content:center;padding:34px}
+.d-art img{width:min(360px,85%);filter:drop-shadow(0 20px 24px rgba(0,0,0,.28));transition:transform .3s}
+.deal-hero:hover .d-art img{transform:scale(1.05) rotate(-3deg)}
+.deal-card{background:#fff;border-radius:20px;padding:20px;display:flex;gap:18px;align-items:center;box-shadow:var(--sh);border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
+.deal-card:hover{transform:translateY(-5px);box-shadow:var(--sh-lg)}
+.d-art-s{width:132px;height:112px;flex:none;background:#FFF6D9;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:10px}
+.d-art-s img{max-width:100%;max-height:100%;object-fit:contain}
+.d-txt-s h4{font:500 19px var(--fd);margin-bottom:5px}
+.d-txt-s p{font-size:13.5px;color:#6b655b;line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.d-row{display:flex;align-items:center;gap:10px}
+.d-row .add-btn{margin-left:auto}
+
+/* ---------- coming soon ---------- */
+#coming{background:var(--char);color:#F5F1E6;padding:88px 0 96px}
+#coming .kicker{color:var(--yellow)}
+#coming .kicker::before{background:var(--yellow)}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:26px}
+.cs-card{background:#2A2A28;border:1px solid #3B3B37;border-radius:22px;overflow:hidden;transition:transform .25s,border-color .25s}
+.cs-card:hover{transform:translateY(-6px);border-color:var(--yellow)}
+.cs-img{position:relative;height:176px;background:#232322;display:flex;align-items:center;justify-content:center;padding:18px}
+.cs-img img{max-height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(0,0,0,.4))}
+.cs-img .stick{position:absolute;top:14px;right:14px;background:var(--yellow);color:var(--char);box-shadow:2px 3px 0 rgba(0,0,0,.55)}
+.cs-body{padding:20px 22px 24px}
+.cs-body h3{font:500 21px var(--fd);color:#fff;margin-bottom:8px}
+.cs-body p{font-size:13.5px;color:#B9B3A6;line-height:1.6;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cs-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;font-weight:800}
+.cs-meta .m{display:inline-flex;align-items:center;gap:6px;color:#B9B3A6}
+.cs-meta svg{width:15px;height:15px;color:var(--yellow)}
+.cs-price{color:var(--yellow);font:600 16px var(--fd);margin-left:auto}
+
+/* ---------- locations ---------- */
+#locations{padding:88px 0 96px}
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.loc-rows{margin-top:28px;display:flex;flex-direction:column;gap:20px}
+.loc-row{display:flex;gap:16px;align-items:flex-start}
+.loc-ic{width:46px;height:46px;flex:none;border-radius:14px;background:var(--yellow);display:flex;align-items:center;justify-content:center}
+.loc-ic svg{width:20px;height:20px}
+.loc-row h4{font:500 17px var(--fd);margin-bottom:3px}
+.loc-row p{color:#57524a;font-size:15px;line-height:1.5}
+.loc-card{background:var(--yellow);border-radius:26px;padding:38px;box-shadow:var(--sh-lg);transform:rotate(1deg);border:2px solid var(--char)}
+.loc-card h3{font:600 26px var(--fd);margin-bottom:8px}
+.loc-card .lc-addr{font-weight:700;color:#4d4425;margin-bottom:18px;line-height:1.55}
+.loc-card .lc-hours{display:flex;align-items:center;gap:9px;font-weight:800;margin-bottom:26px}
+.loc-card .lc-hours svg{width:18px;height:18px}
+.loc-cta{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- footer ---------- */
+footer{background:var(--char);color:#CFC9BC;padding:56px 0 30px}
+.foot-top{display:flex;gap:40px;flex-wrap:wrap;justify-content:space-between;padding-bottom:36px;border-bottom:1px solid #3B3B37}
+.foot-brand .brand-name{color:#fff}
+.foot-brand p{margin-top:12px;font-size:14px;max-width:280px;line-height:1.6;color:#8f8a7e}
+.foot-col h5{font:600 15px var(--fd);color:#fff;margin-bottom:14px;letter-spacing:.05em}
+.foot-col a,.foot-col span{display:block;font-size:14px;padding:5px 0;color:#CFC9BC;transition:color .2s}
+.foot-col a:hover{color:var(--yellow)}
+.foot-bottom{padding-top:22px;font-size:13px;color:#8f8a7e;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+/* ---------- cart drawer ---------- */
+.overlay{position:fixed;inset:0;background:rgba(31,31,31,.5);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:auto}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:#fff;z-index:100;transform:translateX(105%);transition:transform .38s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(31,31,31,.2)}
+.cart-drawer.open{transform:none}
+.cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:2px solid var(--char)}
+.cart-head h3{font:600 22px var(--fd);display:flex;align-items:center;gap:10px}
+.cart-head h3 svg{width:22px;height:22px;color:var(--red)}
+.cart-head small{font:700 13px var(--fb);color:var(--mut)}
+.otype-row{padding:16px 22px 0}
+.seg{display:flex;background:var(--gray);border-radius:14px;padding:5px;gap:5px}
+.seg-b{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font:500 14px var(--fd);padding:11px;border-radius:10px;color:#6b655b;transition:.2s}
+.seg-b svg{width:17px;height:17px}
+.seg-b.active{background:var(--char);color:var(--yellow)}
+.cart-items{flex:1;overflow-y:auto;padding:16px 22px;display:flex;flex-direction:column;gap:14px}
+.c-empty{text-align:center;margin:auto;color:#6b655b;padding:30px}
+.c-empty svg{width:52px;height:52px;color:#D9D2C2;margin:0 auto 14px}
+.c-empty h4{font:500 20px var(--fd);color:var(--char);margin-bottom:6px}
+.c-item{display:flex;gap:13px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:11px}
+.c-img{width:64px;height:56px;flex:none;border-radius:10px;background:#FFF6D9;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.c-img img{max-width:92%;max-height:92%;object-fit:contain}
+.c-img img.custom{width:100%;height:100%;object-fit:cover}
+.c-info{flex:1;min-width:0}
+.c-info h4{font:500 15px var(--fd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-info .c-ea{font-size:12.5px;font-weight:800;color:var(--mut)}
+.qty{display:inline-flex;align-items:center;gap:2px;margin-top:7px;border:1.5px solid var(--line);border-radius:99px;padding:2px}
+.qty button{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--char);transition:.15s}
+.qty button:hover{background:var(--yellow)}
+.qty button svg{width:14px;height:14px}
+.qty span{min-width:24px;text-align:center;font:700 14px var(--fb)}
+.c-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.c-right strong{font:600 16px var(--fd);color:var(--red)}
+.c-rm{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#B7B0A2;transition:.2s}
+.c-rm:hover{background:#FDECEC;color:var(--red)}
+.c-rm svg{width:16px;height:16px}
+.cart-foot{border-top:2px solid var(--char);padding:18px 22px 20px;background:var(--cream)}
+.t-row{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#57524a;padding:4px 0}
+.t-row.grand{font:600 20px var(--fd);color:var(--char);border-top:1.5px dashed #D9D2C2;margin-top:8px;padding-top:12px}
+.t-row.grand span:last-child{color:var(--red)}
+.min-note{font-size:12.5px;font-weight:800;color:var(--red-d);background:#FDECEC;border-radius:10px;padding:8px 12px;margin:10px 0 0}
+.cart-foot .btn{width:100%;margin-top:14px;font-size:16px}
+.continue{display:block;text-align:center;margin-top:12px;font:700 13.5px var(--fb);color:#6b655b}
+.continue:hover{color:var(--char)}
+
+/* ---------- modals ---------- */
+.modal-ov{position:fixed;inset:0;background:rgba(31,31,31,.55);z-index:120;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-ov.open{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:24px;width:100%;max-height:94vh;overflow-y:auto;transform:translateY(26px) scale(.97);transition:transform .3s cubic-bezier(.34,1.3,.64,1)}
+.modal-ov.open .modal{transform:none}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1.5px solid var(--line);position:sticky;top:0;background:#fff;z-index:2;border-radius:24px 24px 0 0}
+.modal-head h3{font:600 22px var(--fd)}
+.modal.checkout{max-width:920px}
+.checkout-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+.co-form{padding:26px;display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font:800 11.5px var(--fb);letter-spacing:.1em;text-transform:uppercase;color:#6b655b}
+.field input,.field select,.field textarea{font:600 15px var(--fb);padding:12px 14px;border:2px solid #E8E2D4;border-radius:12px;background:#FDFCF8;color:var(--char);outline:none;transition:border .2s,box-shadow .2s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(215,25,32,.1)}
+.field input.bad{border-color:var(--red);background:#FFF5F5}
+.f-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field-addr{transition:.2s}
+.field-addr.off{display:none}
+.field-addr small{color:var(--mut);font-weight:700}
+.pay-block{border:2px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:11px}
+.pay-block h4{font:500 16px var(--fd);display:flex;align-items:center;gap:8px}
+.pay-block h4 svg{width:17px;height:17px;color:var(--red)}
+.pay-opt{display:flex;gap:11px;align-items:flex-start;border:2px solid var(--line);border-radius:13px;padding:12px 14px;cursor:pointer;transition:border .2s}
+.pay-opt:hover{border-color:var(--char)}
+.pay-opt input{margin-top:3px;accent-color:var(--red);width:16px;height:16px}
+.pay-opt.sel{border-color:var(--red);background:#FFF8F8}
+.pay-opt .po-t{font:600 14.5px var(--fb)}
+.pay-opt .po-t svg{width:15px;height:15px;vertical-align:-2px;margin-right:5px;color:#6b655b}
+.pay-opt small{display:block;color:var(--mut);font-weight:700;font-size:12px;margin-top:3px;line-height:1.5}
+.pay-secure{display:flex;gap:8px;align-items:flex-start;font-size:12px;font-weight:700;color:#57524a;background:var(--cream);border-radius:10px;padding:9px 12px;line-height:1.5}
+.pay-secure svg{width:15px;height:15px;flex:none;margin-top:1px;color:var(--red)}
+.co-sum{background:var(--cream);padding:26px;border-left:1.5px solid var(--line)}
+.co-sum h4{font:600 18px var(--fd);margin-bottom:16px}
+.sum-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed #E4DCC8;font-size:13.5px;font-weight:700}
+.sum-item .s-img{width:42px;height:38px;flex:none;background:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sum-item .s-img img{max-width:88%;max-height:88%;object-fit:contain}
+.sum-item .s-img img.custom{width:100%;height:100%;object-fit:cover}
+.sum-item span:nth-child(2){flex:1}
+.sum-item em{font-style:normal;color:var(--mut);font-weight:800}
+.co-totals{margin-top:14px}
+.modal-foot{display:flex;justify-content:flex-end;gap:12px;padding:20px 26px;border-top:1.5px solid var(--line);position:sticky;bottom:0;background:#fff}
+.modal-foot .spacer{margin-right:auto}
+/* confirmation */
+.modal.confirm{max-width:520px;text-align:center;padding:44px 38px 38px}
+.check-ring{width:96px;height:96px;margin:0 auto 20px}
+.check-ring circle{fill:var(--yellow);stroke:var(--char);stroke-width:4;stroke-dasharray:302;stroke-dashoffset:302;animation:draw .7s .1s forwards}
+.check-ring path{stroke:var(--char);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80;animation:draw .5s .6s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.modal.confirm h2{font:700 30px var(--fd);letter-spacing:.02em}
+.modal.confirm .sub{color:#57524a;margin:10px 0 22px;font-size:15px}
+.order-no{display:inline-block;background:var(--yellow);border:2px solid var(--char);box-shadow:3px 4px 0 var(--char);border-radius:14px;font:600 26px var(--fd);padding:10px 26px;transform:rotate(-2deg);margin-bottom:24px}
+.cf-details{text-align:left;background:var(--gray);border-radius:16px;padding:18px 20px;margin-bottom:22px}
+.cf-row{display:flex;justify-content:space-between;gap:14px;padding:6px 0;font-size:14px;font-weight:700}
+.cf-row span:first-child{color:#6b655b}
+.cf-items{border-top:1.5px dashed #D9D2C2;margin-top:8px;padding-top:10px}
+.cf-items div{display:flex;justify-content:space-between;padding:3px 0;font-size:13.5px;color:#57524a}
+.cf-eta{display:flex;align-items:center;justify-content:center;gap:9px;font:600 16px var(--fd);color:var(--red-d);margin-bottom:24px}
+.cf-eta svg{width:19px;height:19px}
+
+/* ---------- mobile order bar ---------- */
+.mob-bar{display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:85}
+.mob-bar .btn{width:100%;justify-content:space-between;padding:16px 24px;font-size:16px;box-shadow:var(--sh-lg)}
+
+/* ---------- toasts ---------- */
+.fy-toasts{position:fixed;bottom:22px;right:22px;z-index:400;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.fy-toast{display:flex;align-items:center;gap:10px;background:var(--char);color:#fff;font:700 13.5px var(--fb);padding:13px 18px;border-radius:14px;box-shadow:var(--sh-lg);opacity:0;transform:translateY(12px);transition:.3s;max-width:340px}
+.fy-toast.show{opacity:1;transform:none}
+.fy-toast .dot{width:9px;height:9px;border-radius:50%;background:var(--yellow);flex:none}
+.fy-toast.err .dot{background:var(--red)}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .hero-in{grid-template-columns:1fr;padding:48px 24px 70px;text-align:center}
+  .hero p{margin-left:auto;margin-right:auto}
+  .hero-cta,.hero-trust{justify-content:center}
+  .hero-art{min-height:400px;order:-1}
+  .hero-burger{width:min(340px,70%)}
+  .loc-grid{grid-template-columns:1fr;gap:34px}
+  .checkout-grid{grid-template-columns:1fr}
+  .co-sum{border-left:none;border-top:1.5px solid var(--line)}
+  .deal-hero{grid-template-columns:1fr}
+  .d-art{order:-1;padding:24px}
+  .d-art img{width:min(260px,70%)}
+}
+@media (max-width:820px){
+  .main-nav,.head-order{display:none}
+  .burger{display:inline-flex}
+  section{scroll-margin-top:80px}
+}
+@media (max-width:640px){
+  .hf{display:none}
+  .p-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+  .p-img{height:140px}
+  .p-body h3{font-size:16px}
+  .p-desc{display:none}
+  .price{font-size:18px}
+  .add-btn{padding:9px 13px;font-size:13px}
+  .deal-card{flex-direction:row;flex-wrap:wrap}
+  .mob-bar{display:block}
+  body{padding-bottom:76px}
+  .modal-foot{flex-direction:column-reverse}
+  .modal-foot .btn{width:100%}
+  .foot-bottom{justify-content:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .hbob,.hf,.ticker-track,.steam path{animation:none!important}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- google reviews ---------- */
+#reviews{background:var(--cream);padding:88px 0 96px}
+.review-top{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end;margin-bottom:34px}
+.review-rating{background:#fff;border:2px solid var(--char);border-radius:22px;padding:18px 22px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh);min-width:230px}
+.review-rating strong{font:700 34px var(--fd);line-height:1;color:var(--red)}
+.review-stars{color:#F5B700;letter-spacing:2px;font-size:18px;white-space:nowrap}
+.review-rating small{display:block;color:var(--mut);font-weight:800;font-size:11.5px;margin-top:3px}
+.review-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.review-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--sh);display:flex;flex-direction:column;min-height:190px}
+.review-card .r-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.review-avatar{width:42px;height:42px;border-radius:50%;background:var(--char);color:var(--yellow);display:flex;align-items:center;justify-content:center;font:600 16px var(--fd);flex:none}
+.review-card strong{font:600 16px var(--fd);display:block}
+.review-card .r-source{font-size:11.5px;color:var(--mut);font-weight:800}
+.review-card p{font-size:14px;line-height:1.65;color:#57524a;flex:1}
+.review-card .r-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.review-google{display:inline-flex;align-items:center;gap:7px;font:800 12px var(--fb);color:var(--mut)}
+.review-cta{text-align:center;margin-top:26px}
+.review-note{font-size:12px;color:var(--mut);font-weight:700;margin-top:9px}
+@media (max-width:900px){.review-grid{grid-template-columns:1fr}.review-top{grid-template-columns:1fr}.review-rating{justify-self:start}}
+
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-head" id="top">
+  <div class="wrap head-in">
+    <a class="brand" href="#top" id="brandHome">
+      <span class="brand-icon" id="brandIcon">
+        <svg viewBox="0 0 44 44" width="44" height="44"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-name" id="brandName">Frenchy<b>’s</b></span>
+    </a>
+    <nav class="main-nav">
+      <a href="#top">Home</a><a href="#menu">Menu</a><a href="#deals">Deals</a><a href="#reviews">Reviews</a><a href="#locations">Locations</a>
+    </nav>
+    <div class="head-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Search"><i data-lucide="search"></i></button>
+      <button class="icon-btn" id="cartToggle" aria-label="Open cart"><i data-lucide="shopping-bag"></i><span class="cart-badge" id="cartBadge">0</span></button>
+      <a href="#menu" class="btn btn-red btn-sm head-order" id="headOrder">ORDER NOW</a>
+      <button class="icon-btn burger" id="navToggle" aria-label="Open menu"><i data-lucide="menu"></i></button>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <div class="wrap search-in">
+      <i data-lucide="search"></i>
+      <input id="searchInput" placeholder="Search the menu — try “burger” or “shake”" aria-label="Search menu">
+      <button class="icon-btn" id="searchClose" aria-label="Close search"><i data-lucide="x"></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile nav -->
+<nav class="m-nav" id="mNav">
+  <button class="icon-btn m-close" id="mNavClose" aria-label="Close menu"><i data-lucide="x"></i></button>
+  <a href="#top">Home</a><a href="#menu">Menu</a><a href="#deals">Deals</a><a href="#reviews">Reviews</a><a href="#locations">Locations</a>
+  <a href="#menu" class="btn btn-red">ORDER NOW</a>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <span class="eyebrow"><i data-lucide="flame"></i> FAST · FRESH · FRENCHY’S</span>
+      <h1>GOOD FOOD.<br><span class="hl">GOOD MOOD.</span></h1>
+      <p>Fresh flavors, delicious favorites, and fast service — made for you at Frenchy’s.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-red">ORDER NOW <i data-lucide="arrow-right"></i></a>
+        <a href="#menu" class="btn btn-ghost">VIEW MENU</a>
+      </div>
+      <div class="hero-trust">
+        <span class="trust-chip"><i data-lucide="timer"></i> Ready in ~15 min</span>
+        <span class="trust-chip"><i data-lucide="bike"></i> Delivery & pickup</span>
+      </div>
+    </div>
+    <div class="hero-art" id="heroArt">
+      <div class="blob"></div>
+      <div class="ring"></div>
+      <div class="dot-y"></div>
+      <img class="hf hf-fries" id="hfFries" alt="">
+      <img class="hf hf-cup" id="hfCup" alt="">
+      <svg class="hero-burger" viewBox="0 0 360 352" aria-hidden="true">
+        <ellipse cx="180" cy="338" rx="132" ry="11" fill="rgba(31,31,31,.12)"/>
+        <g class="steam" fill="none" stroke="rgba(31,31,31,.3)" stroke-width="6" stroke-linecap="round">
+          <path d="M150 30 q8 -12 0 -22"/><path d="M196 26 q8 -12 0 -22"/>
+        </g>
+        <g class="hlay hl1"><g class="hbob" style="--d:3.2s">
+          <path d="M70 122 Q70 40 180 40 Q290 40 290 122 Z" fill="#F2A93B"/>
+          <ellipse cx="132" cy="76" rx="7" ry="4.4" fill="#FFE3AD" transform="rotate(-22 132 76)"/>
+          <ellipse cx="180" cy="60" rx="7" ry="4.4" fill="#FFE3AD"/>
+          <ellipse cx="228" cy="76" rx="7" ry="4.4" fill="#FFE3AD" transform="rotate(22 228 76)"/>
+          <ellipse cx="152" cy="98" rx="7" ry="4.4" fill="#FFE3AD" transform="rotate(-10 152 98)"/>
+          <ellipse cx="208" cy="98" rx="7" ry="4.4" fill="#FFE3AD" transform="rotate(10 208 98)"/>
+        </g></g>
+        <g class="hlay hl2"><g class="hbob" style="--d:3.6s;--dl:.3s">
+          <path d="M62 150 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 q10 -18 20 0 v12 H62 Z" fill="#6CBF3E"/>
+        </g></g>
+        <g class="hlay hl3"><g class="hbob" style="--d:3.4s;--dl:.6s">
+          <ellipse cx="142" cy="192" rx="36" ry="12" fill="#E23B2E"/><ellipse cx="142" cy="190" rx="26" ry="7" fill="#F2685C"/>
+          <ellipse cx="222" cy="196" rx="32" ry="11" fill="#E23B2E"/><ellipse cx="222" cy="194" rx="23" ry="6.5" fill="#F2685C"/>
+        </g></g>
+        <g class="hlay hl4"><g class="hbob" style="--d:3.8s;--dl:.15s">
+          <path d="M70 216 H290 V230 L272 246 254 230 236 246 218 230 200 246 182 230 164 246 146 230 128 246 110 230 92 246 70 230 Z" fill="#FFC72C"/>
+        </g></g>
+        <g class="hlay hl5"><g class="hbob" style="--d:3.3s;--dl:.45s">
+          <rect x="60" y="258" width="240" height="36" rx="18" fill="#7A4A21"/>
+          <circle cx="104" cy="276" r="4.5" fill="#935B2B"/><circle cx="156" cy="270" r="4.5" fill="#935B2B"/><circle cx="208" cy="278" r="4.5" fill="#935B2B"/><circle cx="256" cy="272" r="4.5" fill="#935B2B"/>
+        </g></g>
+        <g class="hlay hl6"><g class="hbob" style="--d:3.5s;--dl:.75s">
+          <rect x="74" y="304" width="212" height="30" rx="15" fill="#E8A33D"/>
+        </g></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>FRESH INGREDIENTS&nbsp;&nbsp;•&nbsp;&nbsp;FAST SERVICE&nbsp;&nbsp;•&nbsp;&nbsp;FLAME-GRILLED&nbsp;&nbsp;•&nbsp;&nbsp;MADE TO ORDER&nbsp;&nbsp;•&nbsp;&nbsp;FRESH INGREDIENTS&nbsp;&nbsp;•&nbsp;&nbsp;FAST SERVICE&nbsp;&nbsp;•&nbsp;&nbsp;FLAME-GRILLED&nbsp;&nbsp;•&nbsp;&nbsp;MADE TO ORDER&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    <span>FRESH INGREDIENTS&nbsp;&nbsp;•&nbsp;&nbsp;FAST SERVICE&nbsp;&nbsp;•&nbsp;&nbsp;FLAME-GRILLED&nbsp;&nbsp;•&nbsp;&nbsp;MADE TO ORDER&nbsp;&nbsp;•&nbsp;&nbsp;FRESH INGREDIENTS&nbsp;&nbsp;•&nbsp;&nbsp;FAST SERVICE&nbsp;&nbsp;•&nbsp;&nbsp;FLAME-GRILLED&nbsp;&nbsp;•&nbsp;&nbsp;MADE TO ORDER&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- ================= MENU ================= -->
+<section id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Our Menu</span>
+      <h2>Pick your favorites</h2>
+      <p>Everything is prepared fresh to order.</p>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="p-grid" id="pGrid"></div>
+  </div>
+</section>
+
+<!-- ================= DEALS ================= -->
+<section id="deals">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Deals & Combos</span>
+      <h2>More food, less money</h2>
+    </div>
+    <div class="deals-grid" id="dealsGrid"></div>
+  </div>
+</section>
+
+<!-- ================= COMING SOON ================= -->
+<section id="coming">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Coming Soon</span>
+      <h2 style="color:#fff">Fresh flavors on the way</h2>
+    </div>
+    <div class="cs-grid" id="csGrid"></div>
+  </div>
+</section>
+
+
+<!-- ================= GOOGLE REVIEWS ================= -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="review-top">
+      <div class="sec-head reveal" style="margin-bottom:0">
+        <span class="kicker">Google Reviews</span>
+        <h2>What our guests are saying</h2>
+        <p id="reviewIntro">Real customer feedback belongs here — connect your Google review page from the Admin panel.</p>
+      </div>
+      <div class="review-rating reveal" id="reviewRating" hidden>
+        <div><strong id="googleRating">5.0</strong><div class="review-stars" aria-label="5 star rating">★★★★★</div><small id="googleReviewCount">Google reviews</small></div>
+      </div>
+    </div>
+    <div class="review-grid" id="reviewGrid">
+      <article class="review-card reveal"><div class="r-head"><span class="review-avatar">G</span><div><strong>Google Reviews</strong><span class="r-source">Your live customer feedback</span></div></div><p>Connect your Google Business Profile review link in Admin → Settings and this section will become your review hub.</p><div class="r-foot"><span class="review-google">● Google</span><span class="review-stars">★★★★★</span></div></article>
+      <article class="review-card reveal"><div class="r-head"><span class="review-avatar">★</span><div><strong>Easy to manage</strong><span class="r-source">Admin-controlled</span></div></div><p>Use the Admin panel to set the public Google rating, review count, and review link without editing the website code.</p><div class="r-foot"><span class="review-google">● Google</span><span class="review-stars">★★★★★</span></div></article>
+      <article class="review-card reveal"><div class="r-head"><span class="review-avatar">F</span><div><strong>Frenchy’s</strong><span class="r-source">Restaurant feedback</span></div></div><p>Once your Google review URL is saved, customers can open the live Google review page directly from the button below.</p><div class="r-foot"><span class="review-google">● Google</span><span class="review-stars">★★★★★</span></div></article>
+    </div>
+    <div class="review-cta">
+      <a class="btn btn-red" id="googleReviewBtn" href="#reviews" target="_blank" rel="noopener">READ REVIEWS ON GOOGLE <i data-lucide="external-link"></i></a>
+      <div class="review-note" id="googleReviewNote">Google review link not configured yet.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOCATIONS ================= -->
+<section id="locations">
+  <div class="wrap">
+    <div class="loc-grid">
+      <div class="reveal">
+        <span class="kicker">Find Us</span>
+        <h2 style="font:600 clamp(1.9rem,3.4vw,2.7rem)/1.1 var(--fd)">Hot & ready, near you</h2>
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ic"><i data-lucide="map-pin"></i></span><div><h4>Address</h4><p id="locAddr"></p></div></div>
+          <div class="loc-row"><span class="loc-ic"><i data-lucide="phone"></i></span><div><h4>Phone</h4><p id="locPhone"></p></div></div>
+          <div class="loc-row"><span class="loc-ic"><i data-lucide="clock"></i></span><div><h4>Opening Hours</h4><p id="locHours"></p></div></div>
+        </div>
+      </div>
+      <div class="loc-card reveal">
+        <h3 id="locName"></h3>
+        <p class="lc-addr" id="locAddr2"></p>
+        <p class="lc-hours"><i data-lucide="clock"></i><span id="locHours2"></span></p>
+        <div class="loc-cta">
+          <a class="btn btn-red" id="dirBtn" target="_blank" rel="noopener">GET DIRECTIONS <i data-lucide="map-pin"></i></a>
+          <a class="btn btn-ghost" id="callBtn">CALL US</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#top">
+          <span class="brand-icon" id="footIcon"><svg viewBox="0 0 44 44" width="44" height="44"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></span>
+          <span class="brand-name" id="footName">Frenchy<b>’s</b></span>
+        </a>
+        <p>Good food, good mood — order online for delivery or pickup.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Order</h5>
+        <a href="#menu">Menu</a><a href="#deals">Deals</a><a href="#locations">Locations</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <span id="footAddr"></span><span id="footPhone"></span><span id="footMail"></span>
+      </div>
+      <div class="foot-col">
+        <h5>Hours</h5>
+        <span id="footHours"></span>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> <span id="footCopy">Frenchy’s</span>. All rights reserved.</span>
+      <span>Prices shown in <span id="footCur"></span> — tax calculated at checkout.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3><i data-lucide="shopping-bag"></i> Your Cart <small id="cartCountTxt"></small></h3>
+    <button class="icon-btn" id="cartClose" aria-label="Close cart"><i data-lucide="x"></i></button>
+  </div>
+  <div class="otype-row">
+    <div class="seg" id="cartSeg">
+      <button class="seg-b" data-t="delivery"><i data-lucide="bike"></i>Delivery</button>
+      <button class="seg-b" data-t="pickup"><i data-lucide="store"></i>Pickup</button>
+    </div>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot"></div>
+</aside>
+
+<!-- ================= CHECKOUT ================= -->
+<div class="modal-ov" id="checkoutOv">
+  <div class="modal checkout">
+    <div class="modal-head"><h3>Checkout</h3><button class="icon-btn" data-close aria-label="Close"><i data-lucide="x"></i></button></div>
+    <div class="checkout-grid">
+      <form class="co-form" id="checkoutForm" novalidate>
+        <div class="field"><label>Order type</label>
+          <div class="seg" id="coSeg">
+            <button type="button" class="seg-b" data-t="delivery"><i data-lucide="bike"></i>Delivery</button>
+            <button type="button" class="seg-b" data-t="pickup"><i data-lucide="store"></i>Pickup</button>
+          </div>
+        </div>
+        <div class="f-2">
+          <div class="field"><label>Customer name</label><input name="name" placeholder="Jane Doe" autocomplete="name"></div>
+          <div class="field"><label>Phone number</label><input name="phone" placeholder="+1 555 010 2233" autocomplete="tel"></div>
+        </div>
+        <div class="field"><label>Email</label><input name="email" type="email" placeholder="jane@email.com" autocomplete="email"></div>
+        <div class="field field-addr" id="addrField"><label>Delivery address</label><input name="address" placeholder="Street, number, city" autocomplete="street-address"><small>Required for delivery orders.</small></div>
+        <div class="pay-block">
+          <h4><i data-lucide="wallet"></i> Payment</h4>
+          <label class="pay-opt sel" id="payCash">
+            <input type="radio" name="payment" value="cash" checked>
+            <span class="po-t"><i data-lucide="banknote"></i>Cash on <span id="payCashType">delivery</span><small>Pay the courier / at the counter when you receive your order.</small></span>
+          </label>
+          <label class="pay-opt" id="payCard">
+            <input type="radio" name="payment" value="card">
+            <span class="po-t"><i data-lucide="credit-card"></i>Card — secure checkout<small>You will be redirected to a secure payment page to complete your purchase safely.</small></span>
+          </label>
+          <div class="pay-secure"><i data-lucide="lock"></i><span>Card data is never entered or stored on this page. Payments run through a PCI-compliant server-side gateway.</span></div>
+        </div>
+      </form>
+      <aside class="co-sum">
+        <h4>Order summary</h4>
+        <div id="sumItems"></div>
+        <div class="co-totals" id="coTotals"></div>
+      </aside>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cream spacer" data-close>Back to cart</button>
+      <button class="btn btn-red" id="placeOrder" form="checkoutForm" type="submit">PLACE ORDER</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CONFIRMATION ================= -->
+<div class="modal-ov" id="confirmOv">
+  <div class="modal confirm">
+    <svg class="check-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M32 52 L45 65 L70 38"/></svg>
+    <h2>ORDER CONFIRMED!</h2>
+    <p class="sub" id="cfSub"></p>
+    <div class="order-no" id="cfNo"></div>
+    <div class="cf-details" id="cfDetails"></div>
+    <div class="cf-eta"><i data-lucide="timer"></i><span id="cfEta"></span></div>
+    <button class="btn btn-red" id="cfDone" style="width:100%">BACK TO MENU</button>
+  </div>
+</div>
+
+<!-- mobile sticky order bar -->
+<div class="mob-bar" id="mobBar"><button class="btn btn-red" id="mobCartBtn"><span id="mobBarTxt"></span><i data-lucide="arrow-right"></i></button></div>
+
+<script>
+/* ============================================================================
+   FRENCHY’S — SHARED CORE (data layer + helpers)
+   Products are loaded from the persistent /api/products backend. localStorage is only a browser cache/fallback.
+   Categories, orders, settings and cart remain local in this standalone build.
+   Payment gateway secrets live ONLY on that backend — never in these files.
+   Payment gateway secrets live ONLY on that backend — never in these files.
+   ============================================================================ */
+const FY = (() => {
+  const K = { products:'fy_products', categories:'fy_categories', coming:'fy_coming', deals:'fy_deals',
+              orders:'fy_orders', notifs:'fy_notifs', settings:'fy_settings', cart:'fy_cart', otype:'fy_otype', ocounter:'fy_ocounter' };
+  const uid  = () => 'fy' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+  /* ---- toast (works on both pages) ---- */
+  let toastWrap;
+  function toast(msg, type='ok'){
+    if(!toastWrap){ toastWrap = document.createElement('div'); toastWrap.className='fy-toasts'; document.body.appendChild(toastWrap); }
+    const t = document.createElement('div'); t.className = 'fy-toast' + (type==='err' ? ' err':'');
+    t.innerHTML = '<span class="dot"></span><span>' + msg + '</span>';
+    toastWrap.appendChild(t);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=> t.remove(), 320); }, 3400);
+  }
+
+  /* ---- low-level storage ---- */
+  const get = (k, fb) => { try { const v = localStorage.getItem(k); return v === null ? fb : JSON.parse(v); } catch(e){ return fb; } };
+  const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ toast('Browser storage is full — change not saved.', 'err'); return false; } };
+
+  /* ---- seed data (loaded once; afterwards admin owns everything) ---- */
+  const CATS = ['Burgers','Chicken','Fries & Sides','Wraps','Drinks','Desserts','Kids Meals']
+    .map(n => ({ id: slug(n), name: n, visible: true }));
+  function P(name, desc, price, old, cat, sku, featured){
+    return { id: slug(name), name, desc, price, oldPrice: old || 0,
+      discount: old && old > price ? Math.round((1 - price/old) * 100) : 0,
+      category: cat, img: '', sku, available: true, featured: !!featured, visible: true };
+  }
+  const SEED_PRODUCTS = [
+    P("Classic Frenchy Burger","Flame-grilled beef, melted cheese, crisp lettuce & our secret Frenchy sauce.",5.99,0,'burgers','FR-BUR-01',true),
+    P("Double Cheese Smash","Two smashed beef patties, double cheddar, pickles & smoky mayo.",7.99,8.99,'burgers','FR-BUR-02',true),
+    P("Smokehouse Bacon Burger","Beef patty, crispy bacon, onion rings & a smoky BBQ glaze on a toasted bun.",8.49,0,'burgers','FR-BUR-03',false),
+    P("Crispy Chicken Burger","Golden fried chicken fillet, crunchy slaw & creamy mayo.",6.49,0,'chicken','FR-CHK-01',true),
+    P("Nashville Hot Chicken","Fiery glazed crispy chicken, pickles & cooling ranch.",7.29,8.29,'chicken','FR-CHK-02',false),
+    P("Chicken Tenders (5 pc)","Hand-breaded tenders with your choice of dip.",5.49,0,'chicken','FR-CHK-03',false),
+    P("Golden French Fries","Crisp, golden and lightly salted — the classic side.",2.49,0,'fries-sides','FR-SID-01',false),
+    P("Loaded Cheese Fries","Golden fries smothered in cheddar sauce & crispy onions.",3.99,0,'fries-sides','FR-SID-02',true),
+    P("Cheesy Nuggets (8 pc)","Molten cheese bites with a crunchy golden coating.",4.29,0,'fries-sides','FR-SID-03',false),
+    P("Grilled Chicken Wrap","Grilled chicken, crisp salad & garlic yogurt in a soft tortilla.",6.99,0,'wraps','FR-WRP-01',false),
+    P("Crispy Veggie Wrap","Crumbed veggie patty, avocado & tangy slaw.",5.99,0,'wraps','FR-WRP-02',false),
+    P("Chocolate Shake","Thick, creamy shake blended with real cocoa.",3.49,0,'drinks','FR-DRK-01',true),
+    P("Strawberry Shake","Classic strawberry shake topped with cream.",3.49,0,'drinks','FR-DRK-02',false),
+    P("Sparkling Lemonade","Fresh-squeezed lemonade over crushed ice.",2.29,0,'drinks','FR-DRK-03',false),
+    P("Iced Cola","Ice-cold cola with a guaranteed fizz.",1.99,0,'drinks','FR-DRK-04',false),
+    P("Churros Bites","Cinnamon-dusted churros with a warm chocolate dip.",3.29,0,'desserts','FR-DSR-01',false),
+    P("Vanilla Sundae","Creamy soft-serve with caramel drizzle & crunchy topping.",2.99,0,'desserts','FR-DSR-02',false),
+    P("Junior Cheeseburger Box","Mini burger, small fries & juice — made for little foodies.",4.99,0,'kids-meals','FR-KID-01',true),
+    P("Tenders & Juice Box","Two mini tenders, fries & an apple juice.",5.49,0,'kids-meals','FR-KID-02',false),
+    P("Frenchy Zinger Burger","Crispy spicy chicken, lettuce, cheese & signature Frenchy sauce on a toasted bun.",6.99,0,'chicken','FR-CHK-04',true),
+    P("Loaded Frenchy Fries","Golden fries loaded with cheese sauce, crispy chicken bits & smoky Frenchy drizzle.",4.99,5.49,'fries-sides','FR-FRY-05',true),
+    P("Smoky Chicken Wrap","Grilled chicken, crunchy slaw, pickles & smoky mayo wrapped fresh to order.",5.99,0,'wraps','FR-WRP-03',false),
+    P("Oreo Crunch Shake","Creamy vanilla shake blended with chocolate cookies and topped with whipped cream.",4.49,0,'drinks','FR-DRK-05',true),
+    P("Crispy Wings (6 pc)","Six crunchy chicken wings tossed in your choice of spicy or smoky glaze.",6.49,0,'chicken','FR-CHK-05',false),
+  ];
+  // Product photos supplied by the owner
+  SEED_PRODUCTS.find(p => p.id === 'loaded-frenchy-fries').img = 'assets/loaded-fries.png';
+  SEED_PRODUCTS.find(p => p.id === 'frenchy-zinger-burger').img = 'assets/zinger-burger.png';
+  SEED_PRODUCTS.find(p => p.id === 'smoky-chicken-wrap').img = 'assets/chicken-stall.png';
+
+  const SEED_DEALS = [
+    { id:'deal-feast', title:'Family Feast Box', desc:'2 Classic burgers, 2 crispy chicken burgers, 2 fries, 4 drinks & a churros to share.', price:19.99, oldPrice:26.99, img:'', enabled:true },
+    { id:'deal-duo',   title:'Burger Duo Combo', desc:'Any 2 classic burgers + 1 large fries + 2 drinks.', price:12.49, oldPrice:15.99, img:'', enabled:true },
+    { id:'deal-lunch', title:'Lunch Express',    desc:'1 wrap + small fries + any soft drink. Ready in 5 minutes.', price:8.99, oldPrice:10.99, img:'', enabled:true }
+  ];
+  const days = n => new Date(Date.now() + n*864e5).toISOString().slice(0,10);
+  const SEED_COMING = [
+    { id:'cs-spicy', name:'Spicy Frenchy Burger', desc:'Our classic turned up — jalapeño crunch, spicy Frenchy sauce & pepper-jack cheese.', category:'burgers', launch: days(21), price:7.49, img:'', status:'coming' },
+    { id:'cs-froyo', name:'Caramel Froyo Crunch', desc:'Frozen yogurt swirl with caramel ribbons & honey granola clusters.', category:'desserts', launch: days(38), price:4.29, img:'', status:'coming' }
+  ];
+  const DEFAULT_SETTINGS = { name:"Frenchy's", logo:'', phone:'+1 (555) 013-4477', email:'hello@frenchys.example',
+    address:'48 Crunch Street, Flavor Town, FT 10422', hours:'Mon – Sun · 10:00 AM – 11:00 PM',
+    deliveryFee:2.99, minOrder:10, tax:8.5, currency:'$', googleReviewUrl:'', googleRating:'', googleReviewCount:'' };
+
+  function ensureSeed(){
+    if(get(K.categories) === null) put(K.categories, CATS);
+    if(get(K.products)   === null) put(K.products, SEED_PRODUCTS);
+    if(get(K.deals)      === null) put(K.deals, SEED_DEALS);
+    if(get(K.coming)     === null) put(K.coming, SEED_COMING);
+    if(get(K.orders)     === null) put(K.orders, []);
+    if(get(K.notifs)     === null) put(K.notifs, []);
+    if(get(K.ocounter)   === null) put(K.ocounter, 1041);
+    if(get(K.settings)   === null) put(K.settings, DEFAULT_SETTINGS);
+  }
+  ensureSeed();
+
+  /* ---- persistent product storage (server is authoritative; localStorage is cache/fallback) ---- */
+  const API_BASE = window.FY_API_BASE || '';
+  let remoteProducts = null;
+  let remoteLoaded = false;
+  let lastRemoteSignature = '';
+
+  async function apiJSON(path, options={}){
+    const res = await fetch(API_BASE + path, Object.assign({ credentials:'same-origin' }, options));
+    let body = null;
+    try { body = await res.json(); } catch(e) {}
+    if(!res.ok) throw new Error((body && body.error) || ('Request failed (' + res.status + ')'));
+    return body;
+  }
+
+  function cacheProducts(v){
+    remoteProducts = Array.isArray(v) ? v : [];
+    try { localStorage.setItem(K.products, JSON.stringify(remoteProducts)); } catch(e) {}
+  }
+
+  async function refreshProductsFromServer(silent=true){
+    try{
+      const body = await apiJSON('/api/products');
+      const list = Array.isArray(body.products) ? body.products : [];
+      const sig = JSON.stringify(list);
+      const changed = sig !== lastRemoteSignature;
+      lastRemoteSignature = sig;
+      remoteLoaded = true;
+      cacheProducts(list);
+      if(changed) document.dispatchEvent(new CustomEvent('fy:products-remote', {detail:{products:list}}));
+      return true;
+    }catch(err){
+      if(!silent) toast('Server sync failed: ' + err.message, 'err');
+      return false;
+    }
+  }
+
+  async function saveProductsRemote(v){
+    cacheProducts(v);
+    try{
+      const body = await apiJSON('/api/products', {
+        method:'PUT',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({products:v})
+      });
+      const saved = Array.isArray(body.products) ? body.products : v;
+      cacheProducts(saved);
+      lastRemoteSignature = JSON.stringify(saved);
+      remoteLoaded = true;
+      document.dispatchEvent(new CustomEvent('fy:products-remote', {detail:{products:saved, saved:true}}));
+      return true;
+    }catch(err){
+      toast('Product change was only cached locally because the server could not be reached. Deploy /api/products to enable permanent saving.', 'err');
+      return false;
+    }
+  }
+
+  setTimeout(()=>refreshProductsFromServer(true), 0);
+  setInterval(()=>refreshProductsFromServer(true), 5000);
+
+  /* ---- data API: products are server-persisted; other CMS data remains local ---- */
+  const db = {
+    products:   () => remoteProducts !== null ? remoteProducts : get(K.products, SEED_PRODUCTS),
+    saveProducts: v => saveProductsRemote(v),
+    categories: () => get(K.categories, []), saveCategories: v => put(K.categories, v),
+    coming:     () => get(K.coming, []),     saveComing:     v => put(K.coming, v),
+    deals:      () => get(K.deals, []),      saveDeals:      v => put(K.deals, v),
+    orders:     () => get(K.orders, []),     saveOrders:     v => put(K.orders, v),
+    notifs:     () => get(K.notifs, []),     saveNotifs:     v => put(K.notifs, v),
+    settings:   () => Object.assign({}, DEFAULT_SETTINGS, get(K.settings, {})),
+    saveSettings: v => put(K.settings, v),
+    nextOrderNo: () => { const n = get(K.ocounter, 1041) + 1; put(K.ocounter, n); return 'FR-' + n; }
+  };
+
+  /* ---- cross-tab live sync ---- */
+  const KEYS = Object.values(K);
+  window.addEventListener('storage', e => {
+    if(KEYS.includes(e.key)) document.dispatchEvent(new CustomEvent('fy:data', { detail:{ key: e.key } }));
+  });
+
+  /* ---- cart ---- */
+  const cart = { items: () => get(K.cart, []), save: v => put(K.cart, v),
+                 type: () => get(K.otype, 'delivery'), setType: t => put(K.otype, t) };
+
+  const fmt = n => db.settings().currency + (Math.round(n * 100) / 100).toFixed(2);
+
+  /* ---- uploaded images are resized client-side before saving ---- */
+  function fileToImage(file, cb, max = 720){
+    const r = new FileReader();
+    r.onload = () => { const img = new Image();
+      img.onload = () => { const sc = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', .82)); };
+      img.src = r.result; };
+    r.readAsDataURL(file);
+  }
+
+  /* ---- original brand food artwork (inline SVG illustrations) ---- */
+  const SH = '<ellipse cx="100" cy="146" rx="60" ry="9" fill="rgba(31,31,31,.10)"/>';
+  const ART = {
+    burgers(){ return SH +
+      '<rect x="46" y="118" width="108" height="20" rx="10" fill="#E8A33D"/>' +
+      '<rect x="42" y="100" width="116" height="20" rx="10" fill="#7A4A21"/>' +
+      '<circle cx="72" cy="110" r="2.4" fill="#935B2B"/><circle cx="104" cy="106" r="2.4" fill="#935B2B"/><circle cx="130" cy="112" r="2.4" fill="#935B2B"/>' +
+      '<path d="M40 92 H160 V102 L148 112 136 102 124 112 112 102 100 112 88 102 76 112 64 102 52 112 40 102 Z" fill="#FFC72C"/>' +
+      '<path d="M36 88 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 q8 -14 16 0 v6 H36 Z" fill="#6CBF3E"/>' +
+      '<rect x="52" y="76" width="96" height="9" rx="4.5" fill="#E23B2E"/>' +
+      '<path d="M44 82 Q44 30 100 30 Q156 30 156 82 Z" fill="#F2A93B"/>' +
+      '<ellipse cx="80" cy="55" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(-22 80 55)"/>' +
+      '<ellipse cx="100" cy="46" rx="4.2" ry="2.6" fill="#FFE3AD"/>' +
+      '<ellipse cx="120" cy="55" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(22 120 55)"/>' +
+      '<ellipse cx="90" cy="68" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(-10 90 68)"/>' +
+      '<ellipse cx="112" cy="68" rx="4.2" ry="2.6" fill="#FFE3AD" transform="rotate(10 112 68)"/>'; },
+    chicken(){ return SH +
+      '<line x1="122" y1="98" x2="156" y2="124" stroke="#FFF4E1" stroke-width="15" stroke-linecap="round"/>' +
+      '<circle cx="160" cy="127" r="11" fill="#FFF4E1"/><circle cx="149" cy="135" r="9" fill="#FFF4E1"/>' +
+      '<path d="M52 34 Q104 12 136 44 Q164 74 138 102 Q108 128 74 104 Q36 76 52 34 Z" fill="#C97F35"/>' +
+      '<circle cx="82" cy="58" r="5" fill="#B06A26"/><circle cx="104" cy="70" r="4.4" fill="#B06A26"/><circle cx="70" cy="80" r="4.4" fill="#B06A26"/><circle cx="108" cy="46" r="4" fill="#B06A26"/>' +
+      '<path d="M66 40 Q86 28 104 36" stroke="#E3A054" stroke-width="6" fill="none" stroke-linecap="round"/>'; },
+    'fries-sides'(){ return SH +
+      '<g fill="#FFC72C">' +
+      '<rect x="58" y="36" width="13" height="58" rx="6" transform="rotate(-18 64 64)"/>' +
+      '<rect x="72" y="26" width="13" height="66" rx="6" transform="rotate(-9 78 58)"/>' +
+      '<rect x="90" y="18" width="13" height="74" rx="6"/>' +
+      '<rect x="108" y="24" width="13" height="66" rx="6" transform="rotate(9 114 56)"/>' +
+      '<rect x="124" y="34" width="13" height="56" rx="6" transform="rotate(18 130 62)"/></g>' +
+      '<path d="M56 74 H144 L132 142 H68 Z" fill="#D71920"/>' +
+      '<path d="M56 74 H144 L142 90 H58 Z" fill="#B4121A"/>' +
+      '<circle cx="88" cy="107" r="4.6" fill="#fff"/><circle cx="112" cy="107" r="4.6" fill="#fff"/>' +
+      '<path d="M86 118 Q100 130 114 118" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>'; },
+    wraps(){ return SH +
+      '<rect x="26" y="62" width="128" height="44" rx="22" fill="#EFD7A6"/>' +
+      '<path d="M56 66 v36 M82 64 v40 M108 64 v40" stroke="#DFBE82" stroke-width="5" stroke-linecap="round"/>' +
+      '<ellipse cx="152" cy="84" rx="17" ry="22" fill="#E4C48C"/><ellipse cx="152" cy="84" rx="8.5" ry="13" fill="#D8B273"/>' +
+      '<rect x="16" y="58" width="14" height="10" rx="4.5" fill="#FFC72C"/>' +
+      '<rect x="14" y="72" width="16" height="10" rx="4.5" fill="#6CBF3E"/>' +
+      '<rect x="16" y="86" width="15" height="9" rx="4.5" fill="#E23B2E"/>'; },
+    drinks(o){ const top = (o && o.top) || '#FFF3DC'; return SH +
+      '<rect x="94" y="10" width="11" height="46" rx="5" fill="#FFC72C" transform="rotate(10 100 33)"/>' +
+      '<path d="M64 52 Q100 26 136 52 Z" fill="' + top + '"/>' +
+      '<rect x="58" y="50" width="84" height="12" rx="6" fill="#E9E2D6"/>' +
+      '<path d="M62 62 L72 140 H128 L138 62 Z" fill="#D71920"/>' +
+      '<path d="M65 88 L135 88 L132 110 L68 110 Z" fill="#FFC72C"/>' +
+      '<path d="M76 70 h6 l-4 62 h-6 z" fill="rgba(255,255,255,.22)"/>'; },
+    desserts(){ return SH +
+      '<path d="M72 90 L82 140 H118 L128 90 Z" fill="#BEE3F0"/>' +
+      '<rect x="68" y="84" width="64" height="9" rx="4.5" fill="#A6D6E6"/>' +
+      '<ellipse cx="100" cy="82" rx="34" ry="14" fill="#FFF3DC"/><ellipse cx="100" cy="64" rx="26" ry="12" fill="#FFF3DC"/><ellipse cx="100" cy="48" rx="17" ry="10" fill="#FFF3DC"/>' +
+      '<path d="M100 42 q2 -9 11 -11" stroke="#FFF3DC" stroke-width="7" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="88" cy="62" r="2.2" fill="#D71920"/><circle cx="110" cy="66" r="2.2" fill="#6CBF3E"/><circle cx="100" cy="52" r="2.2" fill="#FFC72C"/>' +
+      '<circle cx="100" cy="34" r="7" fill="#D71920"/>' +
+      '<path d="M100 28 q3 -8 10 -9" stroke="#7A4A21" stroke-width="3" fill="none" stroke-linecap="round"/>'; },
+    'kids-meals'(){ return SH +
+      '<rect x="76" y="32" width="11" height="42" rx="5" fill="#FFC72C" transform="rotate(-8 81 53)"/>' +
+      '<rect x="95" y="26" width="11" height="48" rx="5" fill="#FFC72C"/>' +
+      '<rect x="114" y="34" width="11" height="40" rx="5" fill="#FFC72C" transform="rotate(9 119 54)"/>' +
+      '<path d="M52 66 H148 L138 142 H62 Z" fill="#FFC72C"/>' +
+      '<path d="M52 66 H148 L146 84 H54 Z" fill="#D71920"/>' +
+      '<polygon points="100,92 106,106 121,107 110,117 113,131 100,123 87,131 90,117 79,107 94,106" fill="#D71920"/>'; }
+  };
+  const DRINK_TOPS = [['choc','#7A4A2B'],['straw','#F49AB0'],['cola','#E9E2D6'],['lemon','#FFE08A']];
+  function art(kind, name){
+    let inner;
+    if(kind === 'drinks' && name){
+      const n = name.toLowerCase(); const hit = DRINK_TOPS.find(d => n.includes(d[0]));
+      inner = ART.drinks({ top: hit ? hit[1] : '#FFF3DC' });
+    } else inner = (ART[kind] || ART.burgers)();
+    return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160">' + inner + '</svg>');
+  }
+  function comboArt(){
+    return 'data:image/svg+xml,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">' +
+      '<g transform="translate(0,66) scale(.58)">' + ART.burgers() + '</g>' +
+      '<g transform="translate(104,72) scale(.58)">' + ART['fries-sides']() + '</g>' +
+      '<g transform="translate(178,64) scale(.6)">' + ART.drinks({}) + '</g></svg>');
+  }
+
+  return { K, db, cart, fmt, uid, slug, toast, fileToImage, art, comboArt, DEFAULT_SETTINGS };
+})();
+
+/* ============================================================================
+   FRENCHY’S — CUSTOMER SITE
+   ============================================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const icons = () => { if(window.lucide) lucide.createIcons(); };
+
+let cart  = FY.cart.items();
+let otype = FY.cart.type();
+const state = { cat:'all', q:'' };
+const TINTS = { burgers:'#FFF1DB', chicken:'#FDEBDD', 'fries-sides':'#FFF6D9', wraps:'#F2EEE0',
+                drinks:'#FDEBEE', desserts:'#FCE9F1', 'kids-meals':'#FFF3D6' };
+
+const catOf   = id => { const c = FY.db.categories().find(c => c.id === id); return c ? c.name : 'Specials'; };
+const catVis  = id => { const c = FY.db.categories().find(c => c.id === id); return c ? c.visible !== false : true; };
+const pImg    = p  => p.img || FY.art(p.category, p.name);
+const dealImg = d  => d.img || FY.comboArt();
+const discOf  = p  => p.discount > 0 ? p.discount : (p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0);
+
+/* ---------- brand / settings ---------- */
+function renderBrand(){
+  const s = FY.db.settings();
+  const name = s.name.replace(/'$/, '') ;
+  const esc = s.name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const parts = esc.split(/’|'/); 
+  const nameHtml = parts.length > 1 ? parts[0] + '<b>’s</b>' : esc;
+  const logoHtml = s.logo ? '<img src="' + s.logo + '" alt="' + esc + '">' :
+    '<svg viewBox="0 0 44 44" width="44" height="44"><rect width="44" height="44" rx="12" fill="#D71920"/><g fill="#FFC72C"><rect x="12.5" y="8" width="4.6" height="12" rx="2.3" transform="rotate(-9 14.8 14)"/><rect x="19.7" y="6" width="4.6" height="14" rx="2.3"/><rect x="26.9" y="8" width="4.6" height="12" rx="2.3" transform="rotate(9 29.2 14)"/></g><path d="M11 17.5 H33 L30.6 36.5 H13.4 Z" fill="#FFC72C"/><circle cx="18.4" cy="25.5" r="1.9" fill="#1F1F1F"/><circle cx="25.6" cy="25.5" r="1.9" fill="#1F1F1F"/><path d="M17.8 29.5 Q22 33.4 26.2 29.5" stroke="#1F1F1F" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
+  $('#brandIcon').innerHTML = logoHtml;
+  $('#footIcon').innerHTML  = logoHtml;
+  $('#brandName').innerHTML = nameHtml;
+  $('#footName').innerHTML  = nameHtml;
+  $('#footCopy').textContent = s.name;
+  document.title = s.name + ' — Good Food. Good Mood.';
+  $('#locAddr').textContent = s.address;   $('#locAddr2').textContent = s.address;
+  $('#locPhone').textContent = s.phone;    $('#locHours').textContent = s.hours;
+  $('#locHours2').textContent = s.hours;   $('#locName').textContent = s.name;
+  $('#footAddr').textContent = s.address;  $('#footPhone').textContent = s.phone;
+  $('#footMail').textContent = s.email;    $('#footHours').textContent = s.hours;
+  $('#footCur').textContent = s.currency;
+  $('#dirBtn').href  = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.address);
+  $('#callBtn').href = 'tel:' + s.phone.replace(/[^+\d]/g,'');
+  $('#year').textContent = new Date().getFullYear();
+  renderGoogleReviews();
+}
+
+/* ---------- menu ---------- */
+function renderChips(){
+  const cats = FY.db.categories().filter(c => c.visible !== false);
+  const prods = visibleProducts();
+  const used = new Set(prods.map(p => p.category));
+  const list = cats.filter(c => used.has(c.id));
+  $('#chips').innerHTML = [{id:'all',name:'All'}].concat(list)
+    .map(c => '<button class="chip' + (state.cat === c.id ? ' active':'') + '" data-cat="' + c.id + '">' + c.name + '</button>').join('');
+}
+function visibleProducts(){
+  return FY.db.products().filter(p => p.visible !== false && catVis(p.category));
+}
+function renderProducts(){
+  const q = state.q.toLowerCase();
+  let list = visibleProducts()
+    .filter(p => (state.cat === 'all' || p.category === state.cat))
+    .filter(p => !q || (p.name + ' ' + p.desc).toLowerCase().includes(q));
+  list.sort((a,b) => (b.featured ? 1:0) - (a.featured ? 1:0));
+  if(!list.length){
+    $('#pGrid').innerHTML = '<div class="empty-note">No matches' + (q ? ' for “' + state.q + '”' : '') + ' — try another craving.</div>';
+    return;
+  }
+  $('#pGrid').innerHTML = list.map(p => {
+    const d = discOf(p);
+    return '<article class="p-card reveal' + (p.available ? '' : ' soldout') + '">' +
+      '<div class="p-img" style="background:' + (TINTS[p.category] || '#F5F5F5') + '">' +
+        (d ? '<span class="stick">-' + d + '%</span>' : '') +
+        (p.featured && p.available ? '<span class="stick pop">POPULAR</span>' : '') +
+        '<img class="' + (p.img ? 'custom' : '') + '" src="' + pImg(p) + '" alt="' + p.name + '" loading="lazy">' +
+      '</div><div class="p-body">' +
+        '<div class="p-cat">' + catOf(p.category) + '</div>' +
+        '<h3>' + p.name + '</h3>' +
+        '<p class="p-desc">' + p.desc + '</p>' +
+        '<div class="p-foot"><span class="price">' + FY.fmt(p.price) + '</span>' +
+          (p.oldPrice > p.price ? '<s class="old">' + FY.fmt(p.oldPrice) + '</s>' : '') +
+          (p.available
+            ? '<button class="add-btn" data-add="' + p.id + '"><i data-lucide="plus"></i>Add</button>'
+            : '<span class="sold-btn">SOLD OUT</span>') +
+        '</div></div></article>';
+  }).join('');
+  icons(); watchReveal();
+}
+
+/* ---------- deals ---------- */
+function renderDeals(){
+  const deals = FY.db.deals().filter(d => d.enabled);
+  if(!deals.length){ $('#dealsGrid').innerHTML = '<div class="empty-note">No active deals right now — check back soon.</div>'; return; }
+  const [first, ...rest] = deals;
+  const discOfD = d => d.oldPrice > d.price ? Math.round((1 - d.price / d.oldPrice) * 100) : 0;
+  let html = '<article class="deal-hero reveal"><div class="d-txt">' +
+    '<span class="stick">LIMITED TIME' + (discOfD(first) ? ' · -' + discOfD(first) + '%' : '') + '</span>' +
+    '<h3>' + first.title + '</h3><p>' + first.desc + '</p>' +
+    '<div class="d-price"><span class="d-now">' + FY.fmt(first.price) + '</span>' +
+    (first.oldPrice > first.price ? '<span class="d-was">' + FY.fmt(first.oldPrice) + '</span>' : '') + '</div>' +
+    '<button class="btn" data-deal="' + first.id + '"><i data-lucide="plus"></i>ADD DEAL</button></div>' +
+    '<div class="d-art"><img src="' + dealImg(first) + '" alt="' + first.title + '"></div></article>';
+  html += rest.map(d => '<article class="deal-card reveal">' +
+    '<div class="d-art-s"><img src="' + dealImg(d) + '" alt="' + d.title + '" loading="lazy"></div>' +
+    '<div class="d-txt-s"><h4>' + d.title + '</h4><p>' + d.desc + '</p>' +
+    '<div class="d-row"><span class="price">' + FY.fmt(d.price) + '</span>' +
+    (d.oldPrice > d.price ? '<s class="old">' + FY.fmt(d.oldPrice) + '</s>' : '') +
+    '<button class="add-btn" data-deal="' + d.id + '"><i data-lucide="plus"></i>Add</button></div></div></article>').join('');
+  $('#dealsGrid').innerHTML = html;
+  icons(); watchReveal();
+}
+
+/* ---------- coming soon ---------- */
+function renderComing(){
+  const items = FY.db.coming().filter(c => c.status === 'coming');
+  const sec = $('#coming');
+  if(!items.length){ sec.style.display = 'none'; return; }
+  sec.style.display = '';
+  $('#csGrid').innerHTML = items.map(c => {
+    const d = new Date(c.launch + 'T00:00:00');
+    const dateTxt = isNaN(d) ? c.launch : d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+    return '<article class="cs-card reveal">' +
+      '<div class="cs-img"><span class="stick">LAUNCHING SOON</span><img src="' + (c.img || FY.art(c.category, c.name)) + '" alt="' + c.name + '" loading="lazy"></div>' +
+      '<div class="cs-body"><h3>' + c.name + '</h3><p>' + c.desc + '</p>' +
+      '<div class="cs-meta"><span class="m"><i data-lucide="calendar"></i>' + dateTxt + '</span>' +
+      '<span class="m"><i data-lucide="tags"></i>' + catOf(c.category) + '</span>' +
+      (c.price > 0 ? '<span class="cs-price">Expected ' + FY.fmt(c.price) + '</span>' : '') +
+      '</div></div></article>';
+  }).join('');
+  icons(); watchReveal();
+}
+
+/* ---------- cart ---------- */
+function saveCart(){ FY.cart.save(cart); }
+function cartTotal(){ return cart.reduce((s,i) => s + i.price * i.qty, 0); }
+function updateBadge(){
+  const n = cart.reduce((s,i) => s + i.qty, 0);
+  const b = $('#cartBadge'); b.textContent = n; b.style.display = n ? 'flex' : 'none';
+  b.classList.remove('bump'); void b.offsetWidth; if(n) b.classList.add('bump');
+  $('#mobBar').style.display = (n && window.innerWidth <= 640) ? 'block' : 'none';
+  $('#mobBarTxt').textContent = n + (n === 1 ? ' item · ' : ' items · ') + FY.fmt(cartTotal());
+}
+function bumpBadge(){ updateBadge(); }
+function flyToCart(fromEl){
+  const t = $('#cartToggle').getBoundingClientRect();
+  const f = fromEl.getBoundingClientRect();
+  const dot = document.createElement('div'); dot.className = 'fly-dot';
+  dot.style.left = (f.left + f.width/2 - 8) + 'px'; dot.style.top = (f.top + f.height/2 - 8) + 'px';
+  document.body.appendChild(dot);
+  requestAnimationFrame(() => {
+    dot.style.transform = 'translate(' + (t.left + t.width/2 - (f.left + f.width/2)) + 'px,' + (t.top + t.height/2 - (f.top + f.height/2)) + 'px) scale(.35)';
+    dot.style.opacity = '.35';
+  });
+  setTimeout(() => { dot.remove(); bumpBadge(); }, 560);
+}
+function addToCart(item, fromEl){
+  const ex = cart.find(i => i.id === item.id);
+  if(ex) ex.qty++; else cart.push(Object.assign({ qty:1 }, item));
+  saveCart(); renderCart(); updateBadge();
+  if(fromEl) flyToCart(fromEl);
+}
+function renderCart(){
+  const s = FY.db.settings();
+  $('#cartCountTxt').textContent = cart.length ? '(' + cart.reduce((a,i)=>a+i.qty,0) + ')' : '';
+  $$('#cartSeg .seg-b').forEach(b => b.classList.toggle('active', b.dataset.t === otype));
+  if(!cart.length){
+    $('#cartItems').innerHTML = '<div class="c-empty"><i data-lucide="shopping-bag"></i><h4>Your cart is feeling empty</h4><p>Add something delicious from the menu.</p></div>';
+    $('#cartFoot').innerHTML = '<button class="btn btn-red" id="emptyBrowse">BROWSE THE MENU</button>';
+    icons();
+    $('#emptyBrowse').onclick = () => { closeCart(); document.getElementById('menu').scrollIntoView({ behavior:'smooth' }); };
+    return;
+  }
+  $('#cartItems').innerHTML = cart.map(i =>
+    '<div class="c-item"><div class="c-img"><img class="' + (i.custom ? 'custom':'') + '" src="' + i.img + '" alt=""></div>' +
+    '<div class="c-info"><h4>' + i.name + '</h4><span class="c-ea">' + FY.fmt(i.price) + ' each</span>' +
+    '<div class="qty"><button data-a="dec" data-id="' + i.id + '" aria-label="Decrease"><i data-lucide="minus"></i></button>' +
+    '<span>' + i.qty + '</span>' +
+    '<button data-a="inc" data-id="' + i.id + '" aria-label="Increase"><i data-lucide="plus"></i></button></div></div>' +
+    '<div class="c-right"><strong>' + FY.fmt(i.price * i.qty) + '</strong>' +
+    '<button class="c-rm" data-a="rm" data-id="' + i.id + '" aria-label="Remove"><i data-lucide="trash-2"></i></button></div></div>').join('');
+  const sub = cartTotal();
+  const fee = otype === 'delivery' ? s.deliveryFee : 0;
+  const tax = sub * s.tax / 100;
+  const grand = sub + fee + tax;
+  const minShort = s.minOrder - sub;
+  $('#cartFoot').innerHTML =
+    '<div class="t-row"><span>Subtotal</span><span>' + FY.fmt(sub) + '</span></div>' +
+    '<div class="t-row"><span>Delivery fee</span><span>' + (fee ? FY.fmt(fee) : s.currency + '0.00') + '</span></div>' +
+    '<div class="t-row"><span>Tax (' + s.tax + '%)</span><span>' + FY.fmt(tax) + '</span></div>' +
+    '<div class="t-row grand"><span>Total</span><span>' + FY.fmt(grand) + '</span></div>' +
+    (minShort > 0 ? '<div class="min-note">Minimum order is ' + FY.fmt(s.minOrder) + ' — add ' + FY.fmt(minShort) + ' more.</div>' : '') +
+    '<button class="btn btn-red" id="goCheckout"' + (minShort > 0 ? ' disabled' : '') + '>CHECKOUT · ' + FY.fmt(grand) + '</button>' +
+    '<a class="continue" href="#menu" id="keepShopping">Continue shopping</a>';
+  icons();
+  $('#goCheckout').onclick = openCheckout;
+  const kp = $('#keepShopping'); if(kp) kp.onclick = e => { e.preventDefault(); closeCart(); };
+}
+ $('#cartItems').addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if(!b) return;
+  const it = cart.find(i => i.id === b.dataset.id); if(!it) return;
+  if(b.dataset.a === 'inc') it.qty++;
+  if(b.dataset.a === 'dec'){ it.qty--; if(it.qty < 1) cart = cart.filter(i => i !== it); }
+  if(b.dataset.a === 'rm')  cart = cart.filter(i => i !== it);
+  saveCart(); renderCart(); updateBadge();
+});
+
+/* ---------- order type ---------- */
+function setOtype(t){
+  otype = t; FY.cart.setType(t);
+  $$('.seg .seg-b').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+  $('#addrField').classList.toggle('off', t === 'pickup');
+  $('#payCashType').textContent = t === 'delivery' ? 'delivery' : 'pickup';
+  renderCart(); renderSummary();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('.seg .seg-b');
+  if(b && b.closest('.seg').id !== 'coSeg') setOtype(b.dataset.t);
+  if(b && b.closest('.seg').id === 'coSeg') setOtype(b.dataset.t);
+});
+
+/* ---------- drawer / overlay ---------- */
+function openCart(){ $('#cartDrawer').classList.add('open'); $('#overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeCart(){ $('#cartDrawer').classList.remove('open'); $('#overlay').classList.remove('open'); document.body.style.overflow = ''; }
+ $('#cartToggle').onclick = openCart;
+ $('#cartClose').onclick = closeCart;
+ $('#overlay').onclick = closeCart;
+ $('#mobCartBtn').onclick = openCart;
+ $('#headOrder').addEventListener('click', e => { if(cart.length){ e.preventDefault(); openCart(); } });
+
+/* ---------- checkout ---------- */
+function renderSummary(){
+  const s = FY.db.settings();
+  $('#sumItems').innerHTML = cart.map(i =>
+    '<div class="sum-item"><span class="s-img"><img class="' + (i.custom?'custom':'') + '" src="' + i.img + '" alt=""></span>' +
+    '<span>' + i.name + ' <em>× ' + i.qty + '</em></span><span>' + FY.fmt(i.price * i.qty) + '</span></div>').join('');
+  const sub = cartTotal(), fee = otype === 'delivery' ? s.deliveryFee : 0, tax = sub * s.tax / 100;
+  $('#coTotals').innerHTML =
+    '<div class="t-row"><span>Subtotal</span><span>' + FY.fmt(sub) + '</span></div>' +
+    '<div class="t-row"><span>Delivery fee</span><span>' + (fee ? FY.fmt(fee) : s.currency + '0.00') + '</span></div>' +
+    '<div class="t-row"><span>Tax (' + s.tax + '%)</span><span>' + FY.fmt(tax) + '</span></div>' +
+    '<div class="t-row grand"><span>Total</span><span>' + FY.fmt(sub + fee + tax) + '</span></div>';
+  $('#placeOrder').textContent = 'PLACE ORDER · ' + FY.fmt(sub + fee + tax);
+}
+function openModal(id){ $(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal(id){ $(id).classList.remove('open'); document.body.style.overflow = ''; }
+function openCheckout(){ closeCart(); renderSummary(); openModal('#checkoutOv'); }
+ $$('[data-close]').forEach(b => b.onclick = () => closeModal('#checkoutOv'));
+ $('#checkoutOv').addEventListener('click', e => { if(e.target === $('#checkoutOv')) closeModal('#checkoutOv'); });
+ $$('input[name=payment]').forEach(r => r.addEventListener('change', () => {
+  $('#payCash').classList.toggle('sel', r.value === 'cash' && r.checked || $('#payCash input').checked);
+  $('#payCard').classList.toggle('sel', $('#payCard input').checked);
+  $('#payCash').classList.toggle('sel', $('#payCash input').checked);
+}));
+
+ $('#checkoutForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, s = FY.db.settings();
+  const v = {
+    name: f.name.value.trim(), phone: f.phone.value.trim(),
+    email: f.email.value.trim(), address: f.address.value.trim()
+  };
+  let ok = true;
+  const mark = (el, bad) => { el.classList.toggle('bad', bad); if(bad) ok = false; };
+  mark(f.name,   v.name.length < 2);
+  mark(f.phone,  !/^[+\d][\d\s\-()]{6,}$/.test(v.phone));
+  mark(f.email,  !/^\S+@\S+\.\S+$/.test(v.email));
+  mark(f.address, otype === 'delivery' && v.address.length < 8);
+  if(!ok){ FY.toast('Please check the highlighted fields.', 'err'); return; }
+  if(cartTotal() < s.minOrder){ FY.toast('Minimum order is ' + FY.fmt(s.minOrder) + '.', 'err'); return; }
+
+  const payMethod = f.payment.value === 'card' ? 'Card' : 'Cash';
+  const sub = cartTotal(), fee = otype === 'delivery' ? s.deliveryFee : 0, tax = sub * s.tax / 100;
+  const total = sub + fee + tax;
+  if(payMethod === 'Card'){
+    /* Secure flow: your server-side /api/payfast/checkout endpoint must use
+       Premier PayFast credentials from environment variables and return a
+       gateway redirect / 3-D Secure step. Never put MERCHANT_ID or SECURED_KEY
+       in this HTML or localStorage. */
+    const pendingOrder = {
+      id: FY.uid(), no: FY.db.nextOrderNo(), customer: v, type: otype,
+      items: cart.map(i => ({ name:i.name, price:i.price, qty:i.qty, img:i.img, custom:!!i.custom })),
+      subtotal: sub, fee, tax, total, payment:'Card', paymentStatus:'Payment Required', status:'NEW',
+      date:new Date().toISOString(), eta:15 + Math.floor(Math.random()*11)
+    };
+    try{
+      $('#placeOrder').disabled = true;
+      $('#placeOrder').textContent = 'CONNECTING TO SECURE PAYMENT…';
+      const resp = await fetch('/api/payfast/checkout', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(pendingOrder)
+      });
+      const data = await resp.json().catch(()=>({}));
+      if(!resp.ok || !data.redirectUrl) throw new Error(data.message || 'Secure payment service is not configured.');
+      const orders = FY.db.orders(); orders.unshift(pendingOrder); FY.db.saveOrders(orders);
+      window.location.href = data.redirectUrl;
+      return;
+    }catch(err){
+      $('#placeOrder').disabled = false;
+      renderSummary();
+      FY.toast(err.message || 'Unable to start secure payment.', 'err');
+      return;
+    }
+  }
+  const order = {
+    id: FY.uid(), no: FY.db.nextOrderNo(),
+    customer: v, type: otype,
+    items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty, img: i.img, custom: !!i.custom })),
+    subtotal: sub, fee, tax, total,
+    payment: payMethod, paymentStatus: 'Pending', status: 'NEW',
+    date: new Date().toISOString(), eta: 15 + Math.floor(Math.random() * 11)
+  };
+  const orders = FY.db.orders(); orders.unshift(order); FY.db.saveOrders(orders);
+  const notifs = FY.db.notifs();
+  notifs.unshift({ id: FY.uid(), no: order.no, name: v.name, total: order.total, time: Date.now(), read: false });
+  FY.db.saveNotifs(notifs.slice(0, 30));
+
+  cart = []; saveCart(); updateBadge();
+  closeModal('#checkoutOv'); f.reset();
+  $('#cfSub').textContent = 'Thanks, ' + v.name.split(' ')[0] + '! We’re firing up the grill.';
+  $('#cfNo').textContent = order.no;
+  $('#cfDetails').innerHTML =
+    '<div class="cf-row"><span>Customer</span><span>' + v.name + '</span></div>' +
+    '<div class="cf-row"><span>' + (otype === 'delivery' ? 'Deliver to' : 'Pickup at') + '</span><span style="text-align:right;max-width:60%">' +
+      (otype === 'delivery' ? v.address : s.name + ' · ' + s.address) + '</span></div>' +
+    '<div class="cf-row"><span>Order type</span><span>' + otype.charAt(0).toUpperCase() + otype.slice(1) + ' · ' + payMethod + '</span></div>' +
+    '<div class="cf-row"><span>Total</span><span style="color:var(--red)">' + FY.fmt(order.total) + '</span></div>' +
+    '<div class="cf-items">' + order.items.map(i => '<div><span>' + i.name + ' × ' + i.qty + '</span><span>' + FY.fmt(i.price * i.qty) + '</span></div>').join('') + '</div>';
+  $('#cfEta').textContent = 'Estimated preparation time: ~' + order.eta + ' minutes';
+  openModal('#confirmOv');
+  renderCart(); icons();
+});
+ $('#cfDone').onclick = () => closeModal('#confirmOv');
+
+/* ---------- search ---------- */
+let scrolledOnce = false;
+ $('#searchToggle').onclick = () => {
+  $('#searchBar').classList.toggle('open');
+  if($('#searchBar').classList.contains('open')) setTimeout(() => $('#searchInput').focus(), 250);
+};
+ $('#searchClose').onclick = () => { $('#searchBar').classList.remove('open'); $('#searchInput').value = ''; state.q = ''; renderProducts(); };
+ $('#searchInput').addEventListener('input', e => {
+  state.q = e.target.value; renderProducts();
+  if(!scrolledOnce && state.q){ document.getElementById('menu').scrollIntoView({ behavior:'smooth' }); scrolledOnce = true; }
+});
+
+/* ---------- mobile nav ---------- */
+ $('#navToggle').onclick = () => { $('#mNav').classList.add('open'); $('#overlay').classList.add('open'); };
+ $('#mNavClose').onclick = () => { $('#mNav').classList.remove('open'); $('#overlay').classList.remove('open'); };
+ $$('#mNav a').forEach(a => a.addEventListener('click', () => { $('#mNav').classList.remove('open'); $('#overlay').classList.remove('open'); }));
+
+/* ---------- grid clicks (add / deal / chips) ---------- */
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if(chip){ state.cat = chip.dataset.cat; renderChips(); renderProducts(); return; }
+  const add = e.target.closest('[data-add]');
+  if(add){
+    const p = FY.db.products().find(p => p.id === add.dataset.add);
+    if(p && p.available) addToCart({ id: p.id, name: p.name, price: p.price, img: pImg(p), custom: !!p.img }, add);
+    return;
+  }
+  const deal = e.target.closest('[data-deal]');
+  if(deal){
+    const d = FY.db.deals().find(d => d.id === deal.dataset.deal);
+    if(d && d.enabled) addToCart({ id: 'deal:' + d.id, name: d.title, price: d.price, img: dealImg(d), custom: !!d.img }, deal);
+  }
+});
+
+/* ---------- hero art + parallax ---------- */
+ $('#hfFries').src = FY.art('fries-sides');
+ $('#hfCup').src   = FY.art('drinks', { top:'#FFF3DC' }) ? FY.art('drinks') : '';
+(function(){
+  const ha = $('#heroArt');
+  ha.addEventListener('mousemove', e => {
+    const r = ha.getBoundingClientRect();
+    ha.style.setProperty('--mx', ((e.clientX - r.left) / r.width - .5).toFixed(3));
+    ha.style.setProperty('--my', ((e.clientY - r.top) / r.height - .5).toFixed(3));
+  });
+  ha.addEventListener('mouseleave', () => { ha.style.setProperty('--mx', 0); ha.style.setProperty('--my', 0); });
+})();
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold:.12 });
+function watchReveal(){ $$('.reveal:not(.in)').forEach(el => io.observe(el)); }
+
+/* ---------- live sync with admin panel ---------- */
+document.addEventListener('fy:data', e => {
+  const K = FY.K;
+  if(e.detail.key === K.products || e.detail.key === K.categories){
+    /* prune cart items that no longer exist */
+    const pids = new Set(FY.db.products().map(p => p.id).concat(FY.db.deals().filter(d=>d.enabled).map(d => 'deal:' + d.id)));
+    const before = cart.length;
+    cart = cart.filter(i => pids.has(i.id));
+    if(cart.length !== before){ saveCart(); renderCart(); }
+  }
+  renderBrand(); renderChips(); renderProducts(); renderDeals(); renderComing();
+  renderCart(); updateBadge();
+});
+
+document.addEventListener('fy:products-remote', () => { renderBrand(); renderChips(); renderProducts(); renderDeals(); renderComing(); renderCart(); updateBadge(); });
+
+/* ---------- boot ---------- */
+renderBrand(); renderChips(); renderProducts(); renderDeals(); renderComing();
+renderCart(); updateBadge(); setOtype(otype); icons(); watchReveal();
+window.addEventListener('resize', updateBadge);
+</script>
+</body>
+</html>
